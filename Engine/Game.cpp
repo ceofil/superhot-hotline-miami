@@ -49,7 +49,7 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	player.Update(wnd.kbd, wnd.mouse, dt);
+	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, dt);
 	UpdateBullets(dt);
 	HandleShooting();
 }

@@ -8,29 +8,41 @@ Soldier::Soldier(Vec2 pos, Vec2 dir)
 }
 
 
-void Soldier::Update(Keyboard & kbd, Mouse& mouse, float dt)
+void Soldier::Update(Keyboard & kbd, Mouse& mouse, RectF walls[], int indexWalls, float dt)
 {
+	
+	
+	bool movementHappened = false;
 	Vec2 delta = { 0.0f,0.0f };
 	if (kbd.KeyIsPressed(0x57))
 	{
 		delta.y = -1.0f;
+		movementHappened = true;
 	}
-	
 	else if (kbd.KeyIsPressed(0x53))
 	{
 		delta.y = 1.0f;
+		movementHappened = true;
 	}
 	if (kbd.KeyIsPressed(0x41))
 	{
 		delta.x = -1.0f;
+		movementHappened = true;
 	}
 	else if (kbd.KeyIsPressed(0x44))
 	{
 		delta.x = 1.0f;
+		movementHappened = true;
 	}
 
-	pos += delta.GetNormalized() * speed;
-
+	if (movementHappened == true)
+	{
+		pos += delta.GetNormalized() * speed * dt;
+		for ( int i = 1; i <= indexWalls; i++)
+		{
+			DoWallCollision(walls[i], delta, dt);
+		}
+	}
 	dir = (mouse.GetPosVec2() - pos).GetNormalized();
 }
 
@@ -56,11 +68,51 @@ void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
 	}
 }
 
-void Soldier::DoWallCollision(const RectF & wall)
+void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 {
+	RectF rect = GetRect();
+	if (rect.IsOverlappingWith(wall))
+	{
+		if (pos.x > wall.left && pos.x < wall.right)
+		{
+			pos.y -= delta.y * speed * dt;
+		}
+		else if (pos.y > wall.top && pos.y < wall.bottom)
+		{
+			pos.x -= delta.x * speed * dt;
+		}
+		else 
+		{
+			Vec2 corner = { 0.0f, 0.0f };
+			if (pos.y < wall.top) corner.y = wall.top;
+			else corner.y = wall.bottom;
+			if (pos.x < wall.left) corner.x = wall.left;
+			else corner.x = wall.right;
+
+			if (std::abs((pos - corner).x) > std::abs((pos - corner).y))
+			{
+				pos.x -= delta.x * speed * dt;
+			}
+			else
+			{
+				pos.y -= delta.y * speed * dt;
+			}
+			if (rect.IsOverlappingWith(wall))
+			{
+				pos -= delta * speed * dt;
+			}
+		}
+	}
 }
+
+
 
 Vec2 Soldier::GetBulletSpawnPoint()
 {
 	return Vec2(pos + dir * radius * 2.5f);
+}
+
+RectF Soldier::GetRect()
+{
+	return RectF::FromCenter(pos, radius, radius);
 }
