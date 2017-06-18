@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "Bullet.h"
 
 class Soldier
 {
@@ -11,7 +12,11 @@ public:
 	Soldier(Vec2 pos, Vec2 dir);
 	void Update(Keyboard& kbd, Mouse& mouse, float dt);
 	void Draw(Graphics& gfx);
+	void Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound);
+	void DoWallCollision(const RectF& wall);
+
 public:
+	Vec2 GetBulletSpawnPoint();
 	
 private:
 	Vec2 pos;

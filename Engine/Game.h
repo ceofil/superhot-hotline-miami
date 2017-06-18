@@ -23,8 +23,10 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Sound.h"
 #include "FrameTimer.h"
 #include "Soldier.h"
+#include "Bullet.h"
 
 class Game
 {
@@ -38,16 +40,30 @@ private:
 	void UpdateModel(float dt);
 	/********************************/
 	/*  User Functions              */
+	void UpdateBullets(float dt);
+	void DrawBullets();
+	void HandleShooting();
+	void DrawWalls();
 	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	Sound bulletShotSound;
+	
 	FrameTimer ft;
 
 
 	Soldier player;
 
+	static constexpr int nBullets = 10;
+	Bullet playerBullets[nBullets];
+
+	static constexpr int nWalls = 10;
+	RectF walls[nWalls];
+	int indexWalls = 1;
+
+	
 	/********************************/
 };

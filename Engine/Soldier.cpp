@@ -39,6 +39,28 @@ void Soldier::Draw(Graphics & gfx)
 	gfx.DrawCircle(pos, radius, Colors::Green);
 
 	Vec2 aim = pos + dir * radius * 2.5f;
-	gfx.DrawCircle(aim, radius*0.25f, Colors::Red);
-	gfx.DrawLine(pos, aim, Colors::White);
+	gfx.DrawCircle( aim, radius*0.25f, Colors::Red );
+	gfx.DrawLine( pos, aim, Colors::White );
+}
+
+void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
+{
+	for (int i = 0; i < nBullets; i++)
+	{
+		if (bullets[i].IsSpawned() == false)
+		{
+			bullets[i].Spawn( GetBulletSpawnPoint(), dir );
+			bulletShotSound.Play(1.0f, 0.2f);
+			break;
+		}
+	}
+}
+
+void Soldier::DoWallCollision(const RectF & wall)
+{
+}
+
+Vec2 Soldier::GetBulletSpawnPoint()
+{
+	return Vec2(pos + dir * radius * 2.5f);
 }
