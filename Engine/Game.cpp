@@ -24,22 +24,33 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	player(Vec2(300.0f,300.0f),Vec2(0.0f,0.0f))
 {
 }
 
 void Game::Go()
 {
 	gfx.BeginFrame();	
-	UpdateModel();
+
+	float timeperiod = ft.Mark();
+	while (timeperiod > 0.0f)
+	{
+		const float dt = std::min(0.0025f, timeperiod);
+		UpdateModel(dt);
+		timeperiod -= dt;
+	}
+
 	ComposeFrame();
 	gfx.EndFrame();
 }
 
-void Game::UpdateModel()
+void Game::UpdateModel(float dt)
 {
+	player.Update(wnd.kbd, wnd.mouse, dt);
 }
 
 void Game::ComposeFrame()
 {
+	player.Draw(gfx);
 }
