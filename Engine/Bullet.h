@@ -16,16 +16,14 @@ public:
 	void Spawn(Vec2 pos_in, Vec2 dir_in);
 	void Destroy();
 public:
-	void SetDirection(const Vec2& dir);
 	RectF GetRect() const;
-	Vec2 GetVelocity() const;
+	Vec2 GetDir() const;
 	Vec2 GetPosition() const;
 	bool IsSpawned() const;
 	static constexpr float radius = 2.5f;
 private:
-	RectF screen;
 	bool spawned = false;
 	float speed = 200.0f;
 	Vec2 pos;
-	Vec2 vel;
+	Vec2 dir;
 };

@@ -2,20 +2,20 @@
 
 Bullet::Bullet(Vec2 pos_in, Vec2 dir_in)
 	:
-	pos(pos_in)
+	pos(pos_in),
+	dir(dir_in)
 {
-	SetDirection(dir_in);
 }
 
 void Bullet::Draw(Graphics & gfx) const
 {
 	gfx.DrawCircle(pos, radius, Colors::White);
-	gfx.DrawRectPoints(screen, Colors::LightGray);
+	gfx.DrawLine(pos, pos - dir*(radius*5.0f), Colors::Red);
 }
 
 void Bullet::Update(float dt, RectF walls[], int indexWalls, Sound& wallBounceSound)
 {
-	pos += vel * dt;
+	pos += dir * speed * dt;
 	
 	if ( !GetRect().IsContainedBy( RectF(0.0f, float(Graphics::ScreenWidth), 0.0f, float(Graphics::ScreenHeight - 35)) ) )
 	{
@@ -36,9 +36,9 @@ RectF Bullet::GetRect() const
 	return RectF::FromCenter( pos,radius,radius );
 }
 
-Vec2 Bullet::GetVelocity() const
+Vec2 Bullet::GetDir() const
 {
-	return vel;
+	return dir;
 }
 
 Vec2 Bullet::GetPosition() const
@@ -46,10 +46,6 @@ Vec2 Bullet::GetPosition() const
 	return pos;
 }
 
-void Bullet::SetDirection( const Vec2 & dir )
-{
-	vel = dir.GetNormalized() * speed;
-}
 
 
 bool Bullet::IsSpawned() const
@@ -62,7 +58,7 @@ void Bullet::Spawn(Vec2 pos_in, Vec2 dir_in)
 {
 	spawned = true;
 	pos = pos_in;
-	vel = dir_in * speed;
+	dir = dir_in;
 }
 
 void Bullet::Destroy()
