@@ -26,12 +26,18 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	bulletShotSound(L"bulletShot.wav"),
-	player(Vec2(50.0f,50.0f),Vec2(0.0f,0.0f)),
-	enemy(Vec2(300.0f, 500.0f), Vec2(0.0f, 0.0f))
+	player(Vec2(50.0f,50.0f),Vec2(0.0f,0.0f))
 {
 	walls[++indexWalls] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
 	walls[++indexWalls] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
 	walls[++indexWalls] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
+	enemies[0].Spawn(Vec2(150.0f, 450.0f), Vec2(1.0f, 0.0f));
+	
+	enemies[1].Spawn(Vec2(250.0f, 450.0f), Vec2(0.0f, 1.0f));
+	enemies[2].Spawn(Vec2(350.0f, 450.0f), Vec2(1.0f, 0.0f));
+	enemies[3].Spawn(Vec2(450.0f, 450.0f), Vec2(0.0f, 1.0f));
+	enemies[4].Spawn(Vec2(550.0f, 450.0f), Vec2(1.0f, 0.0f));
+	
 }
 
 void Game::Go()
@@ -52,8 +58,8 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, dt);
-	enemy.Update(player, walls, indexWalls, dt);
+	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, playerBullets, nBullets, dt);
+	UpdateEnemies(dt);
 	UpdateBullets(dt);
 	HandleShooting();
 }
@@ -63,9 +69,8 @@ void Game::UpdateModel(float dt)
 void Game::ComposeFrame()
 {
 	player.Draw(gfx, Colors::Green);
-	enemy.Draw(gfx);
 
-	//gfx.DrawLine(player.GetPos(), enemy.GetPos(), Colors::Cyan);
+	DrawEnemies();
 
 	DrawBullets();
 	DrawWalls();
@@ -112,5 +117,27 @@ void Game::DrawWalls()
 	for (int i = 1; i <= indexWalls; i++)
 	{
 		gfx.DrawRectPoints( walls[i], Colors::LightGray );
+	}
+}
+
+void Game::UpdateEnemies(float dt)
+{
+	for (int i = 0; i < nEnemies; i++)
+	{
+		if (enemies[i].IsAlive())
+		{
+			enemies[i].Update(player, walls, indexWalls, playerBullets, nBullets, dt);
+		}
+	}
+}
+
+void Game::DrawEnemies()
+{
+	for (int i = 0; i < nEnemies; i++)
+	{
+		if (enemies[i].IsAlive())
+		{
+			enemies[i].Draw(gfx);
+		}
 	}
 }

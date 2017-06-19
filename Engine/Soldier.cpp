@@ -1,14 +1,22 @@
 #include "Soldier.h"
 
-Soldier::Soldier(Vec2 pos, Vec2 dir)
+Soldier::Soldier(Vec2 pos_in, Vec2 dir_in)
 	:
-	pos(pos),
-	dir(dir)
+	pos(pos_in),
+	dir(dir_in)
 {
+	alive = true;
+}
+
+void Soldier::Spawn(Vec2 pos_in, Vec2 dir_in)
+{
+	pos = pos_in;
+	dir = dir_in;
+	alive = true;
 }
 
 
-void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int indexWalls, float dt)
+void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt)
 {
 	
 	
@@ -120,6 +128,18 @@ void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 	}
 }
 
+void Soldier::HandleBullets(Bullet bullets[], int nBullets)
+{
+	for (int i = 0; i < nBullets; i++)
+	{
+		if ( bullets[i].GetRect().IsOverlappingWith( GetRect() ) )
+		{
+			alive = false;
+			bullets[i].Destroy();
+		}
+	}
+}
+
 void Soldier::Move(Vec2 dir, float dt)
 {
 	pos += dir * speed * dt;
@@ -133,6 +153,11 @@ void Soldier::SetDir(Vec2 dir_in)
 void Soldier::SetSpeed(float speed_in)
 {
 	speed = speed_in;
+}
+
+void Soldier::Kill()
+{
+	alive = false;
 }
 
 
@@ -160,4 +185,9 @@ Vec2 Soldier::GetDir() const
 float Soldier::GetRadius() const
 {
 	return radius;
+}
+
+bool Soldier::IsAlive() const
+{
+	return alive;
 }

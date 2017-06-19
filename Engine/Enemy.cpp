@@ -1,10 +1,14 @@
 #include "Enemy.h"
 
-Enemy::Enemy(Vec2 pos, Vec2 dir)
+Enemy::Enemy(Vec2 pos_in, Vec2 dir_in)
 	:
-	enemy(pos,dir)
+	enemy(pos_in,dir_in)
 {
-	enemy.SetSpeed(100.0f);
+}
+
+void Enemy::Spawn(Vec2 pos_in, Vec2 dir_in)
+{
+	enemy.Spawn(pos_in,dir_in);
 }
 
 void Enemy::Draw(Graphics & gfx)
@@ -20,7 +24,7 @@ void Enemy::Draw(Graphics & gfx)
 	}
 }
 
-void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, float dt)
+void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt)
 {
 	if ( triggered )
 	{
@@ -52,17 +56,11 @@ void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, 
 			AddTrackingPoint(player.GetPos());
 		}
 	}
-	
-	
-
 	if (addPointCooldown > 0.0f)
 	{
 		addPointCooldown -= dt;
 	}
-	if (indexTrackingPoints < 0)
-	{
-		triggered = false;
-	}
+	enemy.HandleBullets(bullets, nBullets);
 }
 
 void Enemy::TrackTarget(const RectF walls[], int indexWalls, float dt)
@@ -84,7 +82,7 @@ void Enemy::TrackTarget(const RectF walls[], int indexWalls, float dt)
 	}
 }
 
-bool Enemy::CanSee(const Soldier & player, const RectF walls[], int indexWalls)
+bool Enemy::CanSee(const Soldier & player, const RectF walls[], int indexWalls) const
 {
 	bool test = true;
 
@@ -104,6 +102,11 @@ bool Enemy::CanSee(const Soldier & player, const RectF walls[], int indexWalls)
 Vec2 Enemy::GetPos() const
 {
 	return enemy.GetPos();
+}
+
+bool Enemy::IsAlive() const
+{
+	return enemy.IsAlive();
 }
 
 void Enemy::AddTrackingPoint(Vec2 tp)

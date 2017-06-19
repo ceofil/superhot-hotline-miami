@@ -58,7 +58,7 @@ void Bullet::Spawn(Vec2 pos_in, Vec2 dir_in)
 {
 	spawned = true;
 	pos = pos_in;
-	dir = dir_in;
+	dir = dir_in.GetNormalized();
 }
 
 void Bullet::Destroy()

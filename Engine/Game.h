@@ -46,6 +46,8 @@ private:
 	void DrawBullets();
 	void HandleShooting();
 	void DrawWalls();
+	void UpdateEnemies(float dt);
+	void DrawEnemies();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -58,7 +60,9 @@ private:
 
 
 	Soldier player;
-	Enemy enemy;
+
+	static constexpr int nEnemies = 5;
+	Enemy enemies[nEnemies];
 
 	static constexpr int nBullets = 10;
 	Bullet playerBullets[nBullets];
