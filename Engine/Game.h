@@ -26,7 +26,9 @@
 #include "Sound.h"
 #include "FrameTimer.h"
 #include "Soldier.h"
+#include "Enemy.h"
 #include "Bullet.h"
+#include "Line.h"
 
 class Game
 {
@@ -56,13 +58,14 @@ private:
 
 
 	Soldier player;
+	Enemy enemy;
 
 	static constexpr int nBullets = 10;
 	Bullet playerBullets[nBullets];
 
 	static constexpr int nWalls = 10;
 	RectF walls[nWalls];
-	int indexWalls = 1;
+	int indexWalls = 0;
 
 	
 	/********************************/

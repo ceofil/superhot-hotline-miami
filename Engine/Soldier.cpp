@@ -8,7 +8,7 @@ Soldier::Soldier(Vec2 pos, Vec2 dir)
 }
 
 
-void Soldier::Update(Keyboard & kbd, Mouse& mouse, RectF walls[], int indexWalls, float dt)
+void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int indexWalls, float dt)
 {
 	
 	
@@ -46,9 +46,9 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse, RectF walls[], int indexWalls
 	dir = (mouse.GetPosVec2() - pos).GetNormalized();
 }
 
-void Soldier::Draw(Graphics & gfx)
+void Soldier::Draw(Graphics & gfx, Color c)
 {
-	gfx.DrawCircle(pos, radius, Colors::Green);
+	gfx.DrawCircle(pos, radius, c);
 
 	Vec2 aim = pos + dir * radius * 2.5f;
 	gfx.DrawCircle( aim, radius*0.25f, Colors::Red );
@@ -81,9 +81,9 @@ void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 		{
 			pos.x -= delta.x * speed * dt;
 		}
-		else 
+		else
 		{
-			Vec2 corner = { 0.0f, 0.0f };
+			Vec2 corner;
 			if (pos.y < wall.top) corner.y = wall.top;
 			else corner.y = wall.bottom;
 			if (pos.x < wall.left) corner.x = wall.left;
@@ -102,17 +102,62 @@ void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 				pos -= delta * speed * dt;
 			}
 		}
+
+
+		if( !(pos.x > wall.left + 5.0F && pos.x < wall.right - 5.0F) && !(pos.y > wall.top + 5.0F && pos.y < wall.bottom - 5.0F) )
+		{
+			Vec2 dif = ( pos - wall.GetCenter() ).GetNormalized();
+			
+			if (std::abs( dir.x ) > std::abs( dir.y ))
+			{
+				Move(Vec2(0.0f, dif.y), dt);
+			}
+			else
+			{
+				Move(Vec2(dif.x, 0.0f), dt);
+			}
+		}
 	}
+}
+
+void Soldier::Move(Vec2 dir, float dt)
+{
+	pos += dir * speed * dt;
+}
+
+void Soldier::SetDir(Vec2 dir_in)
+{
+	dir = dir_in;
+}
+
+void Soldier::SetSpeed(float speed_in)
+{
+	speed = speed_in;
 }
 
 
 
-Vec2 Soldier::GetBulletSpawnPoint()
+Vec2 Soldier::GetBulletSpawnPoint() const
 {
 	return Vec2(pos + dir * radius * 2.5f);
 }
 
-RectF Soldier::GetRect()
+RectF Soldier::GetRect() const
 {
 	return RectF::FromCenter(pos, radius, radius);
+}
+
+Vec2 Soldier::GetPos() const 
+{
+	return pos;
+}
+
+Vec2 Soldier::GetDir() const
+{
+	return dir;
+}
+
+float Soldier::GetRadius() const
+{
+	return radius;
 }

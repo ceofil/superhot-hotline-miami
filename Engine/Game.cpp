@@ -26,9 +26,12 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	bulletShotSound(L"bulletShot.wav"),
-	player(Vec2(300.0f,300.0f),Vec2(0.0f,0.0f))
+	player(Vec2(50.0f,50.0f),Vec2(0.0f,0.0f)),
+	enemy(Vec2(300.0f, 500.0f), Vec2(0.0f, 0.0f))
 {
-	walls[1] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
+	walls[++indexWalls] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
+	walls[++indexWalls] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
+	walls[++indexWalls] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
 }
 
 void Game::Go()
@@ -50,6 +53,7 @@ void Game::Go()
 void Game::UpdateModel(float dt)
 {
 	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, dt);
+	enemy.Update(player, walls, indexWalls, dt);
 	UpdateBullets(dt);
 	HandleShooting();
 }
@@ -58,7 +62,11 @@ void Game::UpdateModel(float dt)
 
 void Game::ComposeFrame()
 {
-	player.Draw(gfx);
+	player.Draw(gfx, Colors::Green);
+	enemy.Draw(gfx);
+
+	//gfx.DrawLine(player.GetPos(), enemy.GetPos(), Colors::Cyan);
+
 	DrawBullets();
 	DrawWalls();
 }
