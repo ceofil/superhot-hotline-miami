@@ -57,6 +57,7 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int inde
 void Soldier::Draw(Graphics & gfx, Color c)
 {
 	gfx.DrawCircle(pos, radius, c);
+	gfx.DrawCircleStrokeOnly(pos, radius, 2.0f, Colors::Black);
 
 	Vec2 aim = pos + dir * radius * 2.5f;
 	gfx.DrawCircle( aim, radius*0.25f, Colors::Red );

@@ -31,12 +31,13 @@ Game::Game(MainWindow& wnd)
 	walls[++indexWalls] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
 	walls[++indexWalls] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
 	walls[++indexWalls] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
-	enemies[0].Spawn(Vec2(150.0f, 450.0f), Vec2(1.0f, 0.0f));
+	enemies[0].Spawn(Vec2(150.0f, 450.0f), 0.0f);
 	
-	enemies[1].Spawn(Vec2(250.0f, 450.0f), Vec2(0.0f, 1.0f));
-	enemies[2].Spawn(Vec2(350.0f, 450.0f), Vec2(1.0f, 0.0f));
-	enemies[3].Spawn(Vec2(450.0f, 450.0f), Vec2(0.0f, 1.0f));
-	enemies[4].Spawn(Vec2(550.0f, 450.0f), Vec2(1.0f, 0.0f));
+	enemies[1].Spawn(Vec2(250.0f, 450.0f), 90.0f);
+	enemies[2].Spawn(Vec2(350.0f, 450.0f), 0.0f);
+	enemies[3].Spawn(Vec2(450.0f, 450.0f), 45.0f);
+	enemies[4].Spawn(Vec2(550.0f, 450.0f), -30.0f);
+	
 	
 }
 
@@ -71,7 +72,6 @@ void Game::ComposeFrame()
 	player.Draw(gfx, Colors::Green);
 
 	DrawEnemies();
-
 	DrawBullets();
 	DrawWalls();
 }
