@@ -11,11 +11,12 @@ public:
 	Soldier() = default;
 	Soldier(Vec2 pos_in, Vec2 dir_in);
 	void Spawn(Vec2 pos_in, Vec2 dir_in);
-	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt);
+	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets,
+		Bullet otherBullets[], int nOtherBullets, float dt);
 	void Draw(Graphics& gfx, Color c);
 	void Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound);
 	void DoWallCollision(const RectF& wall, Vec2 delta, float dt);
-	void HandleBullets(Bullet bullets[], int nBullets);
+	void HandleBullets(Bullet otherBullets[], int nOtherBullets);
 
 public:
 	void Move(Vec2 dir, float dt);
@@ -30,6 +31,7 @@ public:
 	Vec2 GetDir() const;
 	float GetRadius() const;
 	bool IsAlive() const;
+	float shootCooldown = 0.0f;
 	
 private:
 	bool alive = false;

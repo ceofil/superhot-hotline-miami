@@ -27,7 +27,12 @@ void Enemy::Draw(Graphics & gfx)
 }
 
 
-void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt)
+void Enemy::Update(const Soldier & player, 
+	const RectF walls[], int indexWalls,
+	Bullet bullets[], int nBullets,
+	Bullet otherBullets[], int nOtherBullets,
+	Sound& bulletShotSound, 
+	float dt)
 {
 	if ( triggered )
 	{
@@ -41,9 +46,12 @@ void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, 
 
 			float wantedAngle = Vec2ToAngle(  player.GetPos() -  enemy.GetPos());
 
-
 			RotateToward(wantedAngle, dt);
-			//Shoot()
+
+			if (std::abs(wantedAngle - angle) < 1.0f)
+			{
+				enemy.Shoot(bullets, nBullets, bulletShotSound);
+			}
 		}
 		else
 		{
@@ -66,7 +74,8 @@ void Enemy::Update(const Soldier & player, const RectF walls[], int indexWalls, 
 	{
 		addPointCooldown -= dt;
 	}
-	enemy.HandleBullets(bullets, nBullets);
+	enemy.HandleBullets(otherBullets, nOtherBullets);
+	enemy.shootCooldown -= dt;
 
 }
 

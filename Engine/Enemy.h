@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Line.h"
 #include "Bullet.h"
+#include "Sound.h"
 
 class Enemy
 {
@@ -11,7 +12,12 @@ public:
 	Enemy(Vec2 pos_in, float angle_in);
 	void Spawn(Vec2 pos_in, float angle_in);
 	void Draw(Graphics& gfx);
-	void Update(const Soldier& player, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt);
+	void Update(const Soldier& player, 
+		const RectF walls[], int indexWalls, 
+		Bullet bullets[], int nBullets,
+		Bullet otherBullets[], int nOtherBullets,
+		Sound& bulletShotSound, 
+		float dt);
 	void TrackTarget(const RectF walls[], int indexWalls, float dt);
 	bool CanSee(const Soldier& player, const RectF walls[], int indexWalls) const;
 	void RotateToward(float wantedAngle, float dt);

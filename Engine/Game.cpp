@@ -59,7 +59,7 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
-	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, playerBullets, nBullets, dt);
+	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
 	UpdateEnemies(dt);
 	UpdateBullets(dt);
 	HandleShooting();
@@ -86,6 +86,13 @@ void Game::UpdateBullets(float dt)
 			playerBullets[i].Update(dt, walls, indexWalls, bulletShotSound);
 		}
 	}
+	for (int i = 0; i < nBulletsForEnemies; i++)
+	{
+		if (enemyBullets[i].IsSpawned())
+		{
+			enemyBullets[i].Update(dt, walls, indexWalls, bulletShotSound);
+		}
+	}
 }
 
 void Game::DrawBullets()
@@ -95,6 +102,13 @@ void Game::DrawBullets()
 		if ( playerBullets[i].IsSpawned() )
 		{
 			playerBullets[i].Draw(gfx);
+		}
+	}
+	for (int i = 0; i < nBulletsForEnemies; i++)
+	{
+		if (enemyBullets[i].IsSpawned())
+		{
+			enemyBullets[i].Draw(gfx);
 		}
 	}
 }
@@ -126,7 +140,7 @@ void Game::UpdateEnemies(float dt)
 	{
 		if (enemies[i].IsAlive())
 		{
-			enemies[i].Update(player, walls, indexWalls, playerBullets, nBullets, dt);
+			enemies[i].Update(player, walls, indexWalls, enemyBullets, nBulletsForEnemies, playerBullets, nBullets, bulletShotSound, dt);
 		}
 	}
 }

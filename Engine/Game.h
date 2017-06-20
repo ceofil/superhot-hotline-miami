@@ -66,6 +66,8 @@ private:
 
 	static constexpr int nBullets = 10;
 	Bullet playerBullets[nBullets];
+	static constexpr int nBulletsForEnemies = 100;
+	Bullet enemyBullets[nBulletsForEnemies];
 
 	static constexpr int nWalls = 10;
 	RectF walls[nWalls];

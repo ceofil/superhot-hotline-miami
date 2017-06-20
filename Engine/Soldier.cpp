@@ -16,7 +16,11 @@ void Soldier::Spawn(Vec2 pos_in, Vec2 dir_in)
 }
 
 
-void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets, float dt)
+void Soldier::Update(Keyboard & kbd, Mouse& mouse, 
+	const RectF walls[], int indexWalls, 
+	Bullet bullets[], int nBullets,
+	Bullet otherBullets[], int nOtherBullets, 
+	float dt)
 {
 	
 	
@@ -52,13 +56,20 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse, const RectF walls[], int inde
 		}
 	}
 	dir = (mouse.GetPosVec2() - pos).GetNormalized();
+	HandleBullets(otherBullets, nOtherBullets);
+	shootCooldown -= dt;
 }
 
 void Soldier::Draw(Graphics & gfx, Color c)
 {
 	gfx.DrawCircle(pos, radius, c);
-	gfx.DrawCircleStrokeOnly(pos, radius, 2.0f, Colors::Black);
 
+	if (!alive)
+	{
+		gfx.DrawCircle(pos, radius, Colors::Red);
+	}
+
+	gfx.DrawCircleStrokeOnly(pos, radius, 2.0f, Colors::Black);
 	Vec2 aim = pos + dir * radius * 2.5f;
 	gfx.DrawCircle( aim, radius*0.25f, Colors::Red );
 	gfx.DrawLine( pos, aim, Colors::White );
@@ -66,13 +77,17 @@ void Soldier::Draw(Graphics & gfx, Color c)
 
 void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
 {
-	for (int i = 0; i < nBullets; i++)
+	if (shootCooldown <= 0.0f)
 	{
-		if (bullets[i].IsSpawned() == false)
+		for (int i = 0; i < nBullets; i++)
 		{
-			bullets[i].Spawn( GetBulletSpawnPoint(), dir );
-			bulletShotSound.Play(1.0f, 0.2f);
-			break;
+			if (bullets[i].IsSpawned() == false)
+			{
+				bullets[i].Spawn(GetBulletSpawnPoint(), dir);
+				bulletShotSound.Play(1.0f, 0.2f);
+				shootCooldown = 1.0f;
+				break;
+			}
 		}
 	}
 }
@@ -129,14 +144,14 @@ void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 	}
 }
 
-void Soldier::HandleBullets(Bullet bullets[], int nBullets)
+void Soldier::HandleBullets(Bullet otherBullets[], int nOtherBullets)
 {
-	for (int i = 0; i < nBullets; i++)
+	for (int i = 0; i < nOtherBullets; i++)
 	{
-		if ( bullets[i].GetRect().IsOverlappingWith( GetRect() ) )
+		if (otherBullets[i].GetRect().IsOverlappingWith( GetRect() ) )
 		{
 			alive = false;
-			bullets[i].Destroy();
+			otherBullets[i].Destroy();
 		}
 	}
 }
