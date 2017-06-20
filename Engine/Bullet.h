@@ -23,7 +23,7 @@ public:
 	static constexpr float radius = 2.5f;
 private:
 	bool spawned = false;
-	float speed = 450.0f;
+	float speed = 600.0f;
 	Vec2 pos;
 	Vec2 dir;
 };

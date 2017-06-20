@@ -10,7 +10,8 @@ class Soldier
 public:
 	Soldier() = default;
 	Soldier(Vec2 pos_in, Vec2 dir_in);
-	void Spawn(Vec2 pos_in, Vec2 dir_in);
+	void Set(Vec2 pos_in, Vec2 dir_in);
+	void Respawn();
 	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets,
 		Bullet otherBullets[], int nOtherBullets, float dt);
 	void Draw(Graphics& gfx, Color c);
@@ -31,13 +32,18 @@ public:
 	Vec2 GetDir() const;
 	float GetRadius() const;
 	bool IsAlive() const;
-	float shootCooldown = 0.0f;
+	bool IsActive() const;
+	float shootCooldownLeft = 0.0f;
+	static constexpr float shootCooldown = 0.55f;
 	
 private:
+	bool active = false;
 	bool alive = false;
 	Vec2 pos;
 	Vec2 dir;
-	float speed = 50.0f;
-	static constexpr float radius = 15.0f;
+	Vec2 startPos;
+	Vec2 startDir;
+	float speed = 100.0f;
+	static constexpr float radius = 12.0f;
 };
 

@@ -32,16 +32,18 @@ Game::Game(MainWindow& wnd)
 	walls[3] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
 	walls[4] = RectF(100.0f, 300.0f, 300.0f, 350.0f);
 
-	enemies[0].Spawn(Vec2(150.0f, 450.0f), 0.0f);
-	enemies[1].Spawn(Vec2(250.0f, 250.0f), 90.0f);
-	enemies[2].Spawn(Vec2(350.0f, 300.0f), 0.0f);
-	enemies[3].Spawn(Vec2(450.0f, 450.0f), 45.0f);
-	enemies[4].Spawn(Vec2(550.0f, 450.0f), -30.0f);
-	enemies[5].Spawn(Vec2(550.0f, 50.0f), 180.0f);
-	enemies[6].Spawn(Vec2(250.0f, 150.0f), 90.0f);
-	enemies[7].Spawn(Vec2(150.0f, 250.0f), 0.0f);
+	enemies[0].Set(Vec2(150.0f, 450.0f), 180.0f);
+	enemies[1].Set(Vec2(250.0f, 250.0f), 90.0f);
+	enemies[2].Set(Vec2(350.0f, 300.0f), 120.0f);
+	enemies[3].Set(Vec2(450.0f, 450.0f), 90.0f);
+	enemies[4].Set(Vec2(550.0f, 450.0f), 120.0f);
+	enemies[5].Set(Vec2(550.0f, 50.0f), 180.0f);
+	enemies[6].Set(Vec2(250.0f, 150.0f), 90.0f);
+	enemies[7].Set(Vec2(150.0f, 250.0f), 180.0f);
 
-	player.Spawn(Vec2(50.0f, 50.0f), Vec2(0.0f, 0.0f));
+	player.Set(Vec2(50.0f, 50.0f), Vec2(0.0f, 0.0f));
+
+	resetGame();
 }
 
 void Game::Go()
@@ -65,6 +67,10 @@ void Game::UpdateModel(float dt)
 	if (player.IsActive() == false)
 	{
 		dt = dt / 3.0f;
+	}
+	if (player.IsAlive() == false)
+	{
+		resetGame();
 	}
 
 	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
@@ -178,6 +184,24 @@ void Game::DrawEnemies()
 
 void Game::resetGame()
 {
-	
+	player.Respawn();
+	for (int i = 0; i < nEnemies; i++)
+	{
+		enemies[i].Respawn(); 
+	}
+	for (int i = 0; i < nBullets; i++)
+	{
+		if (playerBullets[i].IsSpawned())
+		{
+			playerBullets[i].Destroy();
+		}
+	}
+	for (int i = 0; i < nBulletsForEnemies; i++)
+	{
+		if (enemyBullets[i].IsSpawned())
+		{
+			enemyBullets[i].Destroy();
+		}
+	}
 }
 

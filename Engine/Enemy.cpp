@@ -7,15 +7,28 @@ Enemy::Enemy(Vec2 pos_in, float angle_in)
 {
 }
 
-void Enemy::Spawn(Vec2 pos_in, float angle_in)
+void Enemy::Set(Vec2 pos_in, float angle_in)
 {
-	enemy.Spawn(pos_in, AngleToVec2(angle_in));
-	angle = angle_in;
+	startAngle = angle_in;
+	enemy.Set(pos_in, AngleToVec2(angle_in));
+}
+
+void Enemy::Respawn()
+{
+	enemy.Respawn();
+	angle = startAngle;
+	triggered = false;
+	ResetTrackingPoints();
 }
 
 void Enemy::Draw(Graphics & gfx)
 {
-	enemy.Draw(gfx, Colors::Yellow);
+	gfx.DrawCircle(enemy.GetPos(), enemy.GetRadius(), Color(255,150,150));
+	gfx.DrawCircleStrokeOnly(enemy.GetPos(), enemy.GetRadius(), 1.0f, Color(255,50,50));
+	gfx.DrawCircle(enemy.GetBulletSpawnPoint(), enemy.GetRadius()*0.25f, Colors::Red);
+	gfx.DrawLine(enemy.GetPos(), enemy.GetBulletSpawnPoint(), Colors::White);
+	
+
 	for (int i = 0; i < indexTrackingPoints; i++)
 	{
 		gfx.DrawCircle(trackingPoints[i], 5.0f, Colors::Magenta);
@@ -24,6 +37,7 @@ void Enemy::Draw(Graphics & gfx)
 			gfx.DrawLine(trackingPoints[i], trackingPoints[i+1], Colors::White);
 		}
 	}
+	
 }
 
 
@@ -38,10 +52,8 @@ void Enemy::Update(const Soldier & player,
 	{
 		if (CanSee(player, walls, indexWalls))
 		{
-			while (indexTrackingPoints > 0)
-			{
-				RemoveTrackingPoint();
-			}
+			ResetTrackingPoints();
+
 			AddTrackingPoint(player.GetPos());
 
 			float wantedAngle = Vec2ToAngle(  player.GetPos() -  enemy.GetPos());
@@ -51,15 +63,14 @@ void Enemy::Update(const Soldier & player,
 			if (std::abs(wantedAngle - angle) < 1.0f)
 			{
 				enemy.Shoot(bullets, nBullets, bulletShotSound);
+				TrackTarget(player, walls, indexWalls, dt * 0.5f);
 			}
 		}
 		else
 		{
-			TrackTarget(walls, indexWalls, dt);
-			if (addPointCooldown <= 0.0f)
-			{
-				AddTrackingPoint(player.GetPos());
-			}
+			
+
+			TrackTarget(player, walls, indexWalls, dt);
 		}
 	}
 	else
@@ -67,6 +78,7 @@ void Enemy::Update(const Soldier & player,
 		if (CanSee(player, walls, indexWalls))
 		{
 			triggered = true;
+			enemy.shootCooldownLeft = Soldier::shootCooldown;
 			AddTrackingPoint(player.GetPos());
 		}
 	}
@@ -75,21 +87,31 @@ void Enemy::Update(const Soldier & player,
 		addPointCooldown -= dt;
 	}
 	enemy.HandleBullets(otherBullets, nOtherBullets);
-	enemy.shootCooldown -= dt;
+	enemy.shootCooldownLeft -= dt;
+	angle = Vec2ToAngle(enemy.GetDir());
 
 }
 
-void Enemy::TrackTarget(const RectF walls[], int indexWalls, float dt)
+void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int indexWalls, float dt)
 {
+	if (addPointCooldown <= 0.0f)
+	{
+		AddTrackingPoint(player.GetPos());
+	}
 	if (Vec2(trackingPoints[0] - enemy.GetPos()).GetLength() > enemy.GetRadius())
 	{
 		const Vec2 dir_in = Vec2(trackingPoints[0] - enemy.GetPos()).GetNormalized();
 
-		enemy.SetDir(dir_in);
-		enemy.Move(dir_in, dt);
-		for (int i = 1; i <= indexWalls; i++)
+		float wantedAngle = Vec2ToAngle(dir_in);
+		RotateToward(wantedAngle, dt);
+
+		if (std::abs(wantedAngle - angle) < 1.0f)
 		{
-			enemy.DoWallCollision(walls[i], dir_in, dt);
+			enemy.Move(AngleToVec2(angle), dt);
+			for (int i = 1; i <= indexWalls; i++)
+			{
+				enemy.DoWallCollision(walls[i], AngleToVec2(angle), dt);
+			}
 		}
 	}
 	else
@@ -143,7 +165,7 @@ void Enemy::AddTrackingPoint(Vec2 tp)
 	if(indexTrackingPoints < nTrackingPoints)
 	{ 
 		trackingPoints[++indexTrackingPoints] = tp;
-		addPointCooldown = 0.2f;
+		addPointCooldown = 0.5f;
 	}
 	
 }
@@ -155,6 +177,14 @@ void Enemy::RemoveTrackingPoint()
 		trackingPoints[i] = trackingPoints[i + 1];
 	}
 	indexTrackingPoints--;
+}
+
+void Enemy::ResetTrackingPoints()
+{
+	while (indexTrackingPoints > 0)
+	{
+		RemoveTrackingPoint();
+	}
 }
 
 Vec2 Enemy::AngleToVec2(float angle)

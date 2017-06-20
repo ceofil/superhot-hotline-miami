@@ -8,11 +8,17 @@ Soldier::Soldier(Vec2 pos_in, Vec2 dir_in)
 	alive = true;
 }
 
-void Soldier::Spawn(Vec2 pos_in, Vec2 dir_in)
+void Soldier::Set(Vec2 pos_in, Vec2 dir_in)
 {
-	pos = pos_in;
-	dir = dir_in;
+	startPos = pos_in;
+	startDir = dir_in;
+}
+
+void Soldier::Respawn()
+{
 	alive = true;
+	pos = startPos;
+	dir = startDir;
 }
 
 
@@ -49,35 +55,34 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse,
 
 	if (movementHappened == true)
 	{
+		active = true;
 		pos += delta.GetNormalized() * speed * dt;
 		for ( int i = 1; i <= indexWalls; i++)
 		{
 			DoWallCollision(walls[i], delta, dt);
 		}
 	}
+	else
+	{
+		active = false;
+	}
 	dir = (mouse.GetPosVec2() - pos).GetNormalized();
 	HandleBullets(otherBullets, nOtherBullets);
-	shootCooldown -= dt;
+	shootCooldownLeft -= dt;
 }
 
 void Soldier::Draw(Graphics & gfx, Color c)
 {
 	gfx.DrawCircle(pos, radius, c);
 
-	if (!alive)
-	{
-		gfx.DrawCircle(pos, radius, Colors::Red);
-	}
+	gfx.DrawLine(pos, GetBulletSpawnPoint(), c);
+	gfx.DrawCircle(GetBulletSpawnPoint(), radius*0.25f, Colors::Red);
 
-	gfx.DrawCircleStrokeOnly(pos, radius, 2.0f, Colors::Black);
-	Vec2 aim = pos + dir * radius * 2.5f;
-	gfx.DrawCircle( aim, radius*0.25f, Colors::Red );
-	gfx.DrawLine( pos, aim, Colors::White );
 }
 
 void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
 {
-	if (shootCooldown <= 0.0f)
+	if (shootCooldownLeft <= 0.0f)
 	{
 		for (int i = 0; i < nBullets; i++)
 		{
@@ -85,7 +90,7 @@ void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
 			{
 				bullets[i].Spawn(GetBulletSpawnPoint(), dir);
 				bulletShotSound.Play(1.0f, 0.2f);
-				shootCooldown = 1.0f;
+				shootCooldownLeft = shootCooldown;
 				break;
 			}
 		}
@@ -148,10 +153,13 @@ void Soldier::HandleBullets(Bullet otherBullets[], int nOtherBullets)
 {
 	for (int i = 0; i < nOtherBullets; i++)
 	{
-		if (otherBullets[i].GetRect().IsOverlappingWith( GetRect() ) )
+		if (otherBullets[i].IsSpawned())
 		{
-			alive = false;
-			otherBullets[i].Destroy();
+			if (otherBullets[i].GetRect().IsOverlappingWith(GetRect()))
+			{
+				alive = false;
+				otherBullets[i].Destroy();
+			}
 		}
 	}
 }
@@ -180,7 +188,7 @@ void Soldier::Kill()
 
 Vec2 Soldier::GetBulletSpawnPoint() const
 {
-	return Vec2(pos + dir * radius * 2.5f);
+	return Vec2(pos + dir * radius * 1.5f);
 }
 
 RectF Soldier::GetRect() const
@@ -206,4 +214,9 @@ float Soldier::GetRadius() const
 bool Soldier::IsAlive() const
 {
 	return alive;
+}
+
+bool Soldier::IsActive() const
+{
+	return active;
 }
