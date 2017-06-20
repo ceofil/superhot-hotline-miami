@@ -48,6 +48,8 @@ private:
 	void DrawWalls();
 	void UpdateEnemies(float dt);
 	void DrawEnemies();
+
+	void resetGame();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -61,7 +63,7 @@ private:
 
 	Soldier player;
 
-	static constexpr int nEnemies = 5;
+	static constexpr int nEnemies = 8;
 	Enemy enemies[nEnemies];
 
 	static constexpr int nBullets = 10;
@@ -69,10 +71,9 @@ private:
 	static constexpr int nBulletsForEnemies = 100;
 	Bullet enemyBullets[nBulletsForEnemies];
 
-	static constexpr int nWalls = 10;
+	static constexpr int nWalls = 5;
 	RectF walls[nWalls];
-	int indexWalls = 0;
-
+	int indexWalls = 4;
 	
 	/********************************/
 };

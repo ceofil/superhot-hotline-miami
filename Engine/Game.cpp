@@ -25,20 +25,23 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	bulletShotSound(L"bulletShot.wav"),
-	player(Vec2(50.0f,50.0f),Vec2(0.0f,0.0f))
+	bulletShotSound(L"bulletShot.wav")
 {
-	walls[++indexWalls] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
-	walls[++indexWalls] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
-	walls[++indexWalls] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
+	walls[1] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
+	walls[2] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
+	walls[3] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
+	walls[4] = RectF(100.0f, 300.0f, 300.0f, 350.0f);
+
 	enemies[0].Spawn(Vec2(150.0f, 450.0f), 0.0f);
-	
-	enemies[1].Spawn(Vec2(250.0f, 450.0f), 90.0f);
-	enemies[2].Spawn(Vec2(350.0f, 450.0f), 0.0f);
+	enemies[1].Spawn(Vec2(250.0f, 250.0f), 90.0f);
+	enemies[2].Spawn(Vec2(350.0f, 300.0f), 0.0f);
 	enemies[3].Spawn(Vec2(450.0f, 450.0f), 45.0f);
 	enemies[4].Spawn(Vec2(550.0f, 450.0f), -30.0f);
-	
-	
+	enemies[5].Spawn(Vec2(550.0f, 50.0f), 180.0f);
+	enemies[6].Spawn(Vec2(250.0f, 150.0f), 90.0f);
+	enemies[7].Spawn(Vec2(150.0f, 250.0f), 0.0f);
+
+	player.Spawn(Vec2(50.0f, 50.0f), Vec2(0.0f, 0.0f));
 }
 
 void Game::Go()
@@ -59,6 +62,11 @@ void Game::Go()
 
 void Game::UpdateModel(float dt)
 {
+	if (player.IsActive() == false)
+	{
+		dt = dt / 3.0f;
+	}
+
 	player.Update(wnd.kbd, wnd.mouse, walls, indexWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
 	UpdateEnemies(dt);
 	UpdateBullets(dt);
@@ -69,7 +77,7 @@ void Game::UpdateModel(float dt)
 
 void Game::ComposeFrame()
 {
-	player.Draw(gfx, Colors::Green);
+	player.Draw(gfx, Color(100,150,255));
 
 	DrawEnemies();
 	DrawBullets();
@@ -123,6 +131,18 @@ void Game::HandleShooting()
 			player.Shoot(playerBullets, nBullets, bulletShotSound);
 
 		}
+
+	}
+	if (!wnd.kbd.KeyIsEmpty())
+	{
+		const auto e = wnd.kbd.ReadKey();
+		if (e.IsRelease())
+		{
+			if (e.GetCode() == 0x52)
+			{
+				resetGame();
+			}
+		}
 	}
 }
 
@@ -155,3 +175,9 @@ void Game::DrawEnemies()
 		}
 	}
 }
+
+void Game::resetGame()
+{
+	
+}
+
