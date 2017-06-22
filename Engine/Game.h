@@ -29,6 +29,8 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Line.h"
+#include "Menu.h"
+#include "Text.h"
 
 class Game
 {
@@ -44,12 +46,13 @@ private:
 	/*  User Functions              */
 	void UpdateBullets(float dt);
 	void DrawBullets();
-	void HandleShooting();
+	void HandleInput();
 	void DrawWalls();
 	void UpdateEnemies(float dt);
 	void DrawEnemies();
 
 	void resetGame();
+	void HandleMenuInput();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -57,7 +60,8 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Sound bulletShotSound;
-	
+	Menu menu;
+	Text txt;
 	FrameTimer ft;
 
 
@@ -65,6 +69,7 @@ private:
 
 	static constexpr int nEnemies = 8;
 	Enemy enemies[nEnemies];
+	int currNumberEnemies = 0;
 
 	static constexpr int nBullets = 10;
 	Bullet playerBullets[nBullets];
@@ -73,7 +78,9 @@ private:
 
 	static constexpr int nWalls = 5;
 	RectF walls[nWalls];
-	int indexWalls = 4;
+	int currNumberWalls = 0;
+
+	bool gameIsStarted = false;
 	
 	/********************************/
 };

@@ -12,6 +12,7 @@ public:
 	bool IsOverlappingWith( const RectF& other ) const;
 	bool IsContainedBy( const RectF& other ) const;
 	static RectF FromCenter( const Vec2& center,float halfWidth,float halfHeight );
+	static RectF FromCenter(float x, float y, float width, float height);
 	RectF GetExpanded( float offset ) const;
 	Vec2 GetCenter() const;
 	bool ContainsPoint(Vec2 point);
