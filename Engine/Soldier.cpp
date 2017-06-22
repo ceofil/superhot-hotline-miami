@@ -155,7 +155,7 @@ void Soldier::HandleBullets(Bullet otherBullets[], int nOtherBullets)
 	{
 		if (otherBullets[i].IsSpawned())
 		{
-			if (otherBullets[i].GetRect().IsOverlappingWith(GetRect()))
+			if (Vec2(otherBullets[i].GetPosition() - pos).GetLength() <= radius )
 			{
 				alive = false;
 				otherBullets[i].Destroy();

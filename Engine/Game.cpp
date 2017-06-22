@@ -38,12 +38,12 @@ Game::Game(MainWindow& wnd)
 	enemies[currNumberEnemies++].Set(Vec2(150.0f, 450.0f), 180.0f);
 	enemies[currNumberEnemies++].Set(Vec2(250.0f, 250.0f), 90.0f);
 
-	/*enemies[currNumberEnemies++].Set(Vec2(350.0f, 300.0f), 120.0f);
+	enemies[currNumberEnemies++].Set(Vec2(350.0f, 300.0f), 120.0f);
 	enemies[currNumberEnemies++].Set(Vec2(450.0f, 450.0f), 90.0f);
 	enemies[currNumberEnemies++].Set(Vec2(550.0f, 450.0f), 120.0f);
 	enemies[currNumberEnemies++].Set(Vec2(550.0f, 50.0f), 180.0f);
 	enemies[currNumberEnemies++].Set(Vec2(250.0f, 150.0f), 90.0f);
-	enemies[currNumberEnemies++].Set(Vec2(150.0f, 250.0f), 180.0f);*/
+	enemies[currNumberEnemies++].Set(Vec2(150.0f, 250.0f), 180.0f);
 	
 
 	player.Set(Vec2(50.0f, 50.0f), Vec2(0.0f, 0.0f));
@@ -71,16 +71,20 @@ void Game::UpdateModel(float dt)
 {
 	if (player.IsActive() == false)
 	{
-		dt = dt / 3.0f;
+		dt = dt / 5.0f;
 	}
 	if (player.IsAlive() == false)
 	{
 		resetGame();
 	}
 
-	player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
-	UpdateEnemies(dt);
-	UpdateBullets(dt);
+	if (gameIsStarted)
+	{
+		player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
+		UpdateEnemies(dt);
+		UpdateBullets(dt);
+	}
+
 	HandleInput();
 }
 
