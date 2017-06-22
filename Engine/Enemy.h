@@ -14,13 +14,13 @@ public:
 	void Respawn();
 	void Draw(Graphics& gfx);
 	void Update(const Soldier& player, 
-		const RectF walls[], int indexWalls, 
+		const RectF walls[], int currNumberWalls,
 		Bullet bullets[], int nBullets,
 		Bullet otherBullets[], int nOtherBullets,
 		Sound& bulletShotSound, 
 		float dt);
-	void TrackTarget(const Soldier& player, const RectF walls[], int indexWalls, float dt);
-	bool CanSee(const Soldier& player, const RectF walls[], int indexWalls) const;
+	void TrackTarget(const Soldier& player, const RectF walls[], int currNumberWalls, float dt);
+	bool CanSee(const Soldier& player, const RectF walls[], int currNumberWalls) const;
 	void RotateToward(float wantedAngle, float dt);
 
 

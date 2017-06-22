@@ -12,7 +12,7 @@ public:
 	Soldier(Vec2 pos_in, Vec2 dir_in);
 	void Set(Vec2 pos_in, Vec2 dir_in);
 	void Respawn();
-	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int indexWalls, Bullet bullets[], int nBullets,
+	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int currNumberWalls, Bullet bullets[], int nBullets,
 		Bullet otherBullets[], int nOtherBullets, float dt);
 	void Draw(Graphics& gfx, Color c);
 	void Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound);

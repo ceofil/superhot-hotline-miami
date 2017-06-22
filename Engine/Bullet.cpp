@@ -13,7 +13,7 @@ void Bullet::Draw(Graphics & gfx) const
 	gfx.DrawLine(pos, pos - dir*(radius*5.0f), Colors::Red);
 }
 
-void Bullet::Update(float dt, RectF walls[], int indexWalls, Sound& wallBounceSound)
+void Bullet::Update(float dt, RectF walls[], int currNumberWalls, Sound& wallBounceSound)
 {
 	pos += dir * speed * dt;
 	
@@ -22,7 +22,7 @@ void Bullet::Update(float dt, RectF walls[], int indexWalls, Sound& wallBounceSo
 		Destroy();
 	}
 
-	for (int i = 1; i <= indexWalls; i++)
+	for (int i = 0; i <= currNumberWalls; i++)
 	{
 		if (GetRect().IsOverlappingWith(walls[i]))
 		{

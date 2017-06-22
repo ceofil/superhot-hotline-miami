@@ -23,7 +23,7 @@ void Soldier::Respawn()
 
 
 void Soldier::Update(Keyboard & kbd, Mouse& mouse, 
-	const RectF walls[], int indexWalls, 
+	const RectF walls[], int currNumberWalls,
 	Bullet bullets[], int nBullets,
 	Bullet otherBullets[], int nOtherBullets, 
 	float dt)
@@ -57,7 +57,7 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse,
 	{
 		active = true;
 		pos += delta.GetNormalized() * speed * dt;
-		for ( int i = 1; i <= indexWalls; i++)
+		for ( int i = 0; i <= currNumberWalls; i++)
 		{
 			DoWallCollision(walls[i], delta, dt);
 		}

@@ -12,7 +12,7 @@ public:
 	Bullet() = default;
 	Bullet( Vec2 pos_in, Vec2 dir_in );
 	void Draw( Graphics& gfx ) const;
-	void Update(float dt, RectF walls[], int indexWalls, Sound& wallBounceSound);
+	void Update(float dt, RectF walls[], int currNumberWalls, Sound& wallBounceSound);
 	void Spawn(Vec2 pos_in, Vec2 dir_in);
 	void Destroy();
 public:

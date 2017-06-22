@@ -42,7 +42,7 @@ void Enemy::Draw(Graphics & gfx)
 
 
 void Enemy::Update(const Soldier & player, 
-	const RectF walls[], int indexWalls,
+	const RectF walls[], int currNumberWalls,
 	Bullet bullets[], int nBullets,
 	Bullet otherBullets[], int nOtherBullets,
 	Sound& bulletShotSound, 
@@ -50,7 +50,7 @@ void Enemy::Update(const Soldier & player,
 {
 	if ( triggered )
 	{
-		if (CanSee(player, walls, indexWalls))
+		if (CanSee(player, walls, currNumberWalls))
 		{
 			ResetTrackingPoints();
 
@@ -63,19 +63,19 @@ void Enemy::Update(const Soldier & player,
 			if (std::abs(wantedAngle - angle) < 1.0f)
 			{
 				enemy.Shoot(bullets, nBullets, bulletShotSound);
-				TrackTarget(player, walls, indexWalls, dt * 0.5f);
+				TrackTarget(player, walls, currNumberWalls, dt * 0.5f);
 			}
 		}
 		else
 		{
 			
 
-			TrackTarget(player, walls, indexWalls, dt);
+			TrackTarget(player, walls, currNumberWalls, dt);
 		}
 	}
 	else
 	{
-		if (CanSee(player, walls, indexWalls))
+		if (CanSee(player, walls, currNumberWalls))
 		{
 			triggered = true;
 			enemy.shootCooldownLeft = Soldier::shootCooldown;
@@ -92,7 +92,7 @@ void Enemy::Update(const Soldier & player,
 
 }
 
-void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int indexWalls, float dt)
+void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumberWalls, float dt)
 {
 	if (addPointCooldown <= 0.0f)
 	{
@@ -108,7 +108,7 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int indexWal
 		if (std::abs(wantedAngle - angle) < 1.0f)
 		{
 			enemy.Move(AngleToVec2(angle), dt);
-			for (int i = 1; i <= indexWalls; i++)
+			for (int i = 0; i <= currNumberWalls; i++)
 			{
 				enemy.DoWallCollision(walls[i], AngleToVec2(angle), dt);
 			}
@@ -120,11 +120,11 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int indexWal
 	}
 }
 
-bool Enemy::CanSee(const Soldier & player, const RectF walls[], int indexWalls) const
+bool Enemy::CanSee(const Soldier & player, const RectF walls[], int currNumberWalls) const
 {
 	bool test = true;
 
-	for (int i = 1; i <= indexWalls; i++)
+	for (int i = 0; i <= currNumberWalls; i++)
 	{
 		if( Line(enemy.GetPos(), player.GetPos()).OverlappingWith_Rect(walls[i]) )
 		{
@@ -167,7 +167,6 @@ void Enemy::AddTrackingPoint(Vec2 tp)
 		trackingPoints[++indexTrackingPoints] = tp;
 		addPointCooldown = 0.5f;
 	}
-	
 }
 
 void Enemy::RemoveTrackingPoint()
