@@ -122,18 +122,14 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumb
 
 bool Enemy::CanSee(const Soldier & player, const RectF walls[], int currNumberWalls) const
 {
-	bool test = true;
-
 	for (int i = 0; i <= currNumberWalls; i++)
 	{
 		if( Line(enemy.GetPos(), player.GetPos()).OverlappingWith_Rect(walls[i]) )
 		{
-			test = false;
+			return false;
 		}
-		
 	}
-
-	return test;
+	return true;
 }
 
 void Enemy::RotateToward(float wantedAngle, float dt)

@@ -29,11 +29,18 @@ Game::Game(MainWindow& wnd)
 	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player, gameIsStarted),
 	txt(gfx, 0, 0, 1)
 {
+	
+	/*
 	walls[currNumberWalls++] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
 	walls[currNumberWalls++] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
 	walls[currNumberWalls++] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
 	walls[currNumberWalls++] = RectF(100.0f, 300.0f, 300.0f, 350.0f);
 
+	menu.AddRect(walls[0]);
+	menu.AddRect(walls[1]);
+	menu.AddRect(walls[2]);
+	menu.AddRect(walls[3]);
+	*/
 
 	enemies[currNumberEnemies++].Set(Vec2(150.0f, 450.0f), 180.0f);
 	enemies[currNumberEnemies++].Set(Vec2(250.0f, 250.0f), 90.0f);
