@@ -16,5 +16,5 @@ private:
 	Color color;
 	Color mouseOverColor;
 	int pixelSize;
-	char text[15];
+	char text[50];
 };

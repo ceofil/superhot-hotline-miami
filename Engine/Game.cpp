@@ -79,27 +79,38 @@ void Game::UpdateModel(float dt)
 
 	switch (menu.gameState)
 	{
-	case Menu::GameState::gameStarted:
-	{
-		if (player.IsActive() == false)
+		case Menu::GameState::gameStarted:
 		{
-			dt = dt / 5.0f;
-		}
-		if (player.IsAlive() == false)
-		{
-			resetGame();
-		}
+			if (player.IsActive() == false)
+			{
+				dt = dt / 5.0f;
+			}
+			if (player.IsAlive() == false)
+			{
+				resetGame();
+			}
 
-		player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
-		UpdateEnemies(dt);
-		UpdateBullets(dt);
-		break;
-	}
-	case Menu::GameState::levelEditor:
-	{
-		menu.AddWall(wnd.mouse);
-		break;
-	}
+			player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
+			UpdateEnemies(dt);
+			UpdateBullets(dt);
+			break;
+		}
+		case Menu::GameState::levelEditor:
+		{
+			switch (menu.editorState)
+			{
+				case Menu::EditorState::addWall:
+				{
+					menu.AddWall(wnd.mouse);
+					break;
+				}
+				case Menu::EditorState::addEnemy:
+				{
+					break;
+				}
+			}
+			break;
+		}
 	}
 	HandleInput();
 }
@@ -159,19 +170,22 @@ void Game::HandleInput()
 {
 	while (!wnd.mouse.IsEmpty())
 	{
+		
 		const Mouse::Event e = wnd.mouse.Read();
 		if (e.GetType() == Mouse::Event::Type::LRelease)
 		{
 			if (menu.gameState == Menu::GameState::gameStarted)
 			{
-				player.Shoot(playerBullets, nBullets, bulletShotSound);
+				if (wnd.mouse.IsInWindow())
+				{
+					player.Shoot(playerBullets, nBullets, bulletShotSound);
+				}
 			}
 			else
 			{
 				menu.HandleMousePressed(wnd.mouse);
 			}
 		}
-		wnd.mouse.Flush();
 	}
 	if (!wnd.kbd.KeyIsEmpty())
 	{

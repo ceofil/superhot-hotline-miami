@@ -23,7 +23,9 @@ private:
 	Button save;
 	Button implement;
 	Button load;
+	Button editor;
 	Button addWall;
+	Button back;
 
 	Enemy* enemies;
 	int maxNumberEnemies;
@@ -47,5 +49,12 @@ public:
 		levelEditor,
 		gameStarted
 	};
+	enum class EditorState
+	{
+		nothing,
+		addEnemy,
+		addWall
+	};
 	GameState gameState = GameState::firstMenu;
+	EditorState editorState = EditorState::nothing;
 };

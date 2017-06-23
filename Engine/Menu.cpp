@@ -12,15 +12,21 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	currNumberWalls(currNumberWalls_in),
 	player(player_in)
 {
-	static constexpr float wCenter = Graphics::ScreenWidth / 2; 
-	static constexpr float hCenter = Graphics::ScreenHeight / 2;
+	static constexpr float sw = Graphics::ScreenWidth;
+	static constexpr float sh = Graphics::ScreenHeight;
+	static constexpr float wCenter = sw / 2; 
+	static constexpr float hCenter = sh / 2;
 	static constexpr float width = 150.0f;
 
-	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start", 2, Color(255, 165, 0));
-	save = Button(RectF::FromCenter(wCenter, hCenter, width, 50.0f), "save", 2, Color(255,0,165));
-	implement = Button(RectF::FromCenter(wCenter, hCenter + 100.0f, width, 50.0f), "implement", 2, Color(0, 165, 255));
-	load = Button(RectF::FromCenter(wCenter, hCenter + 200.0f, width, 50.0f), "load", 2, Color(0, 165, 255));
-	addWall = Button(RectF::FromCenter(wCenter, hCenter + 275.0f, width, 50.0f), "add wall", 2, Color(165, 0, 255));
+	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start game", 2, Color(255, 165, 0));
+	load = Button(RectF::FromCenter(wCenter, hCenter -25.0f, width, 50.0f), "load level", 2, Color(0, 165, 255));
+	editor = Button(RectF::FromCenter(wCenter, hCenter + 50.0f, width, 50.0f), "level editor", 2, Color(0, 165, 255));
+
+	back = Button(RectF::FromCenter(100.0f, 50.0f, width, 50.0f), "back", 2, Color(165, 0, 255));
+	save = Button(RectF::FromCenter(100.0f + width, 50.0f, width, 50.0f), "save", 2, Color(255, 0, 165));
+	implement = Button(RectF::FromCenter(100.0f + width * 2.0f, 50.0f, width, 50.0f), "implement", 2, Color(0, 165, 255));
+
+	addWall = Button(RectF::FromCenter(100.0f, sh-50.0f, width, 50.0f), "add wall", 2, Color(165, 0, 255));
 	
 }
 
@@ -31,21 +37,35 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	{
 	case GameState::firstMenu:
 	{
+		editor.Draw(gfx, mouse, txt);
 		start.Draw(gfx, mouse, txt);
-		save.Draw(gfx, mouse, txt);
-		implement.Draw(gfx, mouse, txt);
 		load.Draw(gfx, mouse, txt);
-		addWall.Draw(gfx, mouse, txt);
 		break;
 	}
 	case GameState::levelEditor:
 	{
-		start.Draw(gfx, mouse, txt);
-		save.Draw(gfx, mouse, txt);
-		implement.Draw(gfx, mouse, txt);
-		if (wallStarted)
+		switch (editorState)
 		{
-			gfx.DrawRectPoints(rectBuffer, Colors::LightGray);
+			case EditorState::nothing:
+			{
+				back.Draw(gfx, mouse, txt);
+				save.Draw(gfx, mouse, txt);
+				implement.Draw(gfx, mouse, txt);
+				addWall.Draw(gfx, mouse, txt);
+				break;
+			}
+			case EditorState::addWall:
+			{
+				if (wallStarted)
+				{
+					gfx.DrawRectPoints(rectBuffer, Colors::LightGray);
+				}
+				break;
+			}
+			case EditorState::addEnemy:
+			{
+				break;
+			}
 		}
 		level.Draw(gfx);
 		break;
@@ -76,26 +96,41 @@ void Menu::HandleMousePressed(Mouse& mouse)
 		{
 			level.Load("level.txt");
 		}
-		if (addWall.IsMouseOver(mouse))
+		if (editor.IsMouseOver(mouse))
 		{
 			gameState = GameState::levelEditor;
-			wallStarted = true;
 		}
 		break;
 	}
 	case GameState::levelEditor:
 	{
-		if (start.IsMouseOver(mouse))
+		switch (editorState)
 		{
-			gameState = GameState::gameStarted;
+		case EditorState::nothing:
+		{
+			if (back.IsMouseOver(mouse))
+			{
+				gameState = GameState::firstMenu;
+				editorState = EditorState::nothing;
+			}
+			if (save.IsMouseOver(mouse))
+			{
+				level.Save("level.txt");
+			}
+			if (implement.IsMouseOver(mouse))
+			{
+				level.Implement(walls, currNumberWalls);
+			}
+			if (addWall.IsMouseOver(mouse))
+			{
+				editorState = EditorState::addWall;
+			}
+			break;
 		}
-		if (save.IsMouseOver(mouse))
+		case EditorState::addEnemy:
 		{
-			level.Save("level.txt");
+			break;
 		}
-		if (implement.IsMouseOver(mouse))
-		{
-			level.Implement(walls, currNumberWalls);
 		}
 		break;
 	}
@@ -130,5 +165,6 @@ void Menu::AddWall(Mouse& mouse)
 	{
 		wallStarted = false;
 		level.AddWallEntry(rectBuffer);
+		editorState = EditorState::nothing;
 	}
 }
