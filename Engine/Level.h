@@ -1,7 +1,9 @@
 #pragma once
 #include <fstream>
 #include "RectF.h"
+#include "Vec2.h"
 #include "Graphics.h"
+
 
 class Level
 {
@@ -20,6 +22,7 @@ private:
 	};
 public:
 	void AddWallEntry( RectF wall );
+	void RemoveWallEntry(Vec2 cursor);
 	void Load( const char* filename_in );
 	void Save( const char* filename_out );
 	void Implement( RectF* walls, int& currNumberWalls);

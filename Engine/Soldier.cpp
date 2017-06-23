@@ -57,7 +57,7 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse,
 	{
 		active = true;
 		pos += delta.GetNormalized() * speed * dt;
-		for ( int i = 0; i <= currNumberWalls; i++)
+		for ( int i = 0; i < currNumberWalls; i++)
 		{
 			DoWallCollision(walls[i], delta, dt);
 		}

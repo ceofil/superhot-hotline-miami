@@ -359,6 +359,16 @@ void Graphics::DrawRectStrokeOnly(int x1, int y1, int x2, int y2, Color c)
 	}
 }
 
+void Graphics::DrawRectDiagonals(const RectF rect, Color c)
+{
+	if (rect.IsContainedBy(GetScreenRect()))
+	{
+		DrawLine(Vec2(rect.left, rect.top), Vec2(rect.right, rect.bottom), c);
+		DrawLine(Vec2(rect.right, rect.top), Vec2(rect.left, rect.bottom), c);
+	}
+	
+}
+
 bool Graphics::insideScreen(int x, int y)
 {
 	return
@@ -391,6 +401,11 @@ float Graphics::seglen(int x1, int y1, int x2, int y2)
 void Graphics::FillScreenWith(Color c)
 {
 	DrawRectPoints(0, 0, ScreenWidth, ScreenHeight, c);
+}
+
+RectF Graphics::GetScreenRect() const
+{
+	return RectF(0,float(ScreenWidth-1),0.0f,float(ScreenHeight-1));
 }
 
 

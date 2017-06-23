@@ -64,6 +64,7 @@ public:
 	void DrawRectPoints(int x1, int y1, int x2, int y2, Color c);
 	void DrawRectPoints(const RectF& rect, Color c);
 	void DrawRectStrokeOnly(int x1, int y1, int x2, int y2, Color c);
+	void DrawRectDiagonals(const RectF rect, Color c);
 	void DrawCircle(int x, int y, float r, Color c);
 	void DrawCircle(const Vec2& pos, float r, Color c);
 	void DrawCircleStrokeOnly(int x, int y, float r, float stroke, Color c);
@@ -74,6 +75,7 @@ public:
 	bool insideScreen(Vec2 point);
 	float seglen(int x1, int y1, int x2, int y2);
 	void FillScreenWith(Color c);
+	RectF GetScreenRect() const;
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

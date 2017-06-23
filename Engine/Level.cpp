@@ -40,6 +40,22 @@ void Level::AddWallEntry(RectF  wall)
 	wallEntries[currNumber_WallEntries++] = wall;
 }
 
+void Level::RemoveWallEntry(Vec2 cursor)
+{
+	for (int i = 0; i < currNumber_WallEntries; i++)
+	{
+		if (wallEntries[i].GetRect().ContainsPoint(cursor))
+		{
+			for (int j = i; j + 1 < currNumber_WallEntries; j++)
+			{
+				wallEntries[j] = wallEntries[j + 1];
+			}
+			currNumber_WallEntries--;
+			break;
+		}
+	}
+}
+
 void Level::Load(const char * filename_in)
 {
 	std::ifstream in(filename_in, std::ios::binary);

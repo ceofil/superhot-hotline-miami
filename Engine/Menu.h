@@ -16,6 +16,7 @@ public:
 	void Draw(Graphics& gfx, Mouse& mouse, Text& txt);
 	void HandleMousePressed(Mouse& mouse);
 	void AddWall(Mouse& mouse);
+	void RemoveWall(Mouse& mouse);
 
 private:
 
@@ -25,6 +26,7 @@ private:
 	Button load;
 	Button editor;
 	Button addWall;
+	Button removeWall;
 	Button back;
 
 	Enemy* enemies;
@@ -53,7 +55,8 @@ public:
 	{
 		nothing,
 		addEnemy,
-		addWall
+		addWall,
+		removeWall
 	};
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;

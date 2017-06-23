@@ -108,7 +108,7 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumb
 		if (std::abs(wantedAngle - angle) < 1.0f)
 		{
 			enemy.Move(AngleToVec2(angle), dt);
-			for (int i = 0; i <= currNumberWalls; i++)
+			for (int i = 0; i < currNumberWalls; i++)
 			{
 				enemy.DoWallCollision(walls[i], AngleToVec2(angle), dt);
 			}

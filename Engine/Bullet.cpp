@@ -22,7 +22,7 @@ void Bullet::Update(float dt, RectF walls[], int currNumberWalls, Sound& wallBou
 		Destroy();
 	}
 
-	for (int i = 0; i <= currNumberWalls; i++)
+	for (int i = 0; i < currNumberWalls; i++)
 	{
 		if (GetRect().IsOverlappingWith(walls[i]))
 		{

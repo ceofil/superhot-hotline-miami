@@ -26,7 +26,8 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	save = Button(RectF::FromCenter(100.0f + width, 50.0f, width, 50.0f), "save", 2, Color(255, 0, 165));
 	implement = Button(RectF::FromCenter(100.0f + width * 2.0f, 50.0f, width, 50.0f), "implement", 2, Color(0, 165, 255));
 
-	addWall = Button(RectF::FromCenter(100.0f, sh-50.0f, width, 50.0f), "add wall", 2, Color(165, 0, 255));
+	addWall = Button(RectF::FromCenter(100.0f, sh-50.0f, width, 50.0f), "add wall", 2, Color(165, 165, 0));
+	removeWall = Button(RectF::FromCenter(100.0f + width, sh - 50.0f, width, 50.0f), "remove wall", 2, Color(0, 165, 165));
 	
 }
 
@@ -44,6 +45,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	}
 	case GameState::levelEditor:
 	{
+		level.Draw(gfx);
 		switch (editorState)
 		{
 			case EditorState::nothing:
@@ -51,7 +53,9 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 				back.Draw(gfx, mouse, txt);
 				save.Draw(gfx, mouse, txt);
 				implement.Draw(gfx, mouse, txt);
+
 				addWall.Draw(gfx, mouse, txt);
+				removeWall.Draw(gfx, mouse, txt);
 				break;
 			}
 			case EditorState::addWall:
@@ -62,12 +66,18 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 				}
 				break;
 			}
+			case EditorState::removeWall:
+			{
+				Vec2 cursor = mouse.GetPosVec2();
+				Vec2 dim = Vec2(5.0f,5.0f);
+				gfx.DrawRectDiagonals(RectF(cursor-dim,cursor+dim), Colors::Red);
+				break;
+			}
 			case EditorState::addEnemy:
 			{
 				break;
 			}
 		}
-		level.Draw(gfx);
 		break;
 	}
 	}
@@ -125,6 +135,16 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			{
 				editorState = EditorState::addWall;
 			}
+			if (removeWall.IsMouseOver(mouse))
+			{
+				editorState = EditorState::removeWall;
+			}
+			break;
+		}
+		case EditorState::removeWall:
+		{
+			RemoveWall(mouse);
+			editorState = EditorState::nothing;
 			break;
 		}
 		case EditorState::addEnemy:
@@ -167,4 +187,10 @@ void Menu::AddWall(Mouse& mouse)
 		level.AddWallEntry(rectBuffer);
 		editorState = EditorState::nothing;
 	}
+}
+
+void Menu::RemoveWall(Mouse & mouse)
+{
+	Vec2 cursor = mouse.GetPosVec2();
+	level.RemoveWallEntry( cursor );
 }

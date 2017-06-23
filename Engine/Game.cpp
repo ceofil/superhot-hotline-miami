@@ -198,7 +198,10 @@ void Game::HandleInput()
 				resetGame();
 				break;
 			case VK_ESCAPE:
-				menu.gameState = Menu::GameState::firstMenu;
+				if (menu.editorState == Menu::EditorState::nothing)
+				{
+					menu.gameState = Menu::GameState::firstMenu;
+				}
 				break;
 			}
 		}
@@ -207,7 +210,7 @@ void Game::HandleInput()
 
 void Game::DrawWalls()
 {
-	for (int i = 0; i <= currNumberWalls; i++)
+	for (int i = 0; i < currNumberWalls; i++)
 	{
 		gfx.DrawRectPoints( walls[i], Colors::LightGray );
 	}
