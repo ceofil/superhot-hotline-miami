@@ -12,11 +12,11 @@ public:
 	Menu() = default;
 	Menu(Enemy* enemies_in, int maxNumberEnemies_in, int& currNumberEnemies_in,
 		 RectF* walls_in, int maxNumberWalls_in, int& currNumberWalls_in,
-		 Soldier& player,
-		 bool& gameIsStarted);
+		 Soldier& player);
 	void Draw(Graphics& gfx, Mouse& mouse, Text& txt);
 	void HandleMousePressed(Mouse& mouse);
 	void AddWall(Mouse& mouse);
+
 private:
 
 	Button start;
@@ -33,16 +33,19 @@ private:
 	int maxNumberWalls;
 	int& currNumberWalls;
 	int x1, x2, y1, y2;
-	bool wallStarted;
+	bool wallStarted = false;
 	RectF rectBuffer;
 	
 	Soldier& player;
 
-	bool& gameIsStarted;
-
-	static constexpr float wCenter = Graphics::ScreenWidth / 2;
-	static constexpr float hCenter = Graphics::ScreenHeight / 2;
-	static constexpr float width = 150.0f;
-
 	Level level;
+
+public:
+	enum class GameState
+	{
+		firstMenu,
+		levelEditor,
+		gameStarted
+	};
+	GameState gameState = GameState::firstMenu;
 };

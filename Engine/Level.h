@@ -1,10 +1,12 @@
 #pragma once
 #include <fstream>
 #include "RectF.h"
+#include "Graphics.h"
 
 class Level
 {
 private:
+	//class SoldierEntry
 	class WallEntry
 	{
 	public:
@@ -21,6 +23,7 @@ public:
 	void Load( const char* filename_in );
 	void Save( const char* filename_out );
 	void Implement( RectF* walls, int& currNumberWalls);
+	void Draw(Graphics& gfx);
 private:
 	static constexpr int maxNumberWalls = 50;
 	WallEntry wallEntries[maxNumberWalls];

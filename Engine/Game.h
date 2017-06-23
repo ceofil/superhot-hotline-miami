@@ -52,7 +52,6 @@ private:
 	void DrawEnemies();
 
 	void resetGame();
-	void HandleMenuInput();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -76,11 +75,11 @@ private:
 	static constexpr int nBulletsForEnemies = 100;
 	Bullet enemyBullets[nBulletsForEnemies];
 
-	static constexpr int nWalls = 5;
+	static constexpr int nWalls = 50;
 	RectF walls[nWalls];
 	int currNumberWalls = 0;
 
-	bool gameIsStarted = false;
+	
 	
 	/********************************/
 };

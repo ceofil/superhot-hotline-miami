@@ -68,3 +68,11 @@ void Level::Implement(RectF * walls, int& currNumberWalls)
 	}
 	currNumberWalls = currNumber_WallEntries;
 }
+
+void Level::Draw(Graphics & gfx)
+{
+	for (int i = 0; i < currNumber_WallEntries; i++)
+	{
+		gfx.DrawRectPoints(wallEntries[i].GetRect(),Colors::LightGray);
+	}
+}
