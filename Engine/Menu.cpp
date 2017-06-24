@@ -2,7 +2,8 @@
 
 Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_in, 
 	RectF * walls_in, int maxNumberWalls_in, int & currNumberWalls_in, 
-	Soldier & player_in)
+	Soldier & player_in,
+	Bullet * playerBullets, int maxNumberBullets, Bullet * enemyBullets, int maxNumberBulletsEnemies)
 	:
 	enemies(enemies_in),
 	maxNumberEnemies(maxNumberEnemies_in),
@@ -116,6 +117,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 	{
 		if (start.IsMouseOver(mouse))
 		{
+			RestartGame();
 			gameState = GameState::gameStarted;
 		}
 		if (load.IsMouseOver(mouse))
@@ -286,3 +288,21 @@ void Menu::PlacePlayer(Mouse & mouse)
 		editorState = EditorState::nothing;
 	}
 }
+
+void Menu::RestartGame()
+{
+	player.Respawn();
+	for (int i = 0; i < currNumberEnemies; i++)
+	{
+		enemies[i].Respawn();
+	}
+	for (int i = 0; i < maxNumberBullets; i++)
+	{
+		playerBullets[i].Destroy();
+	}
+	for (int i = 0; i < maxNumberBulletsEnemies; i++)
+	{
+		enemyBullets[i].Destroy();
+	}
+}
+

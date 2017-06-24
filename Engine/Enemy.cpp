@@ -10,7 +10,9 @@ Enemy::Enemy(Vec2 pos_in, float angle_in)
 void Enemy::Set(Vec2 pos_in, float angle_in)
 {
 	startAngle = angle_in;
+	angle = angle_in;
 	enemy.Set(pos_in, AngleToVec2(angle_in));
+	enemy.SetSpeed(100.0f);
 }
 
 void Enemy::Respawn()
@@ -28,7 +30,7 @@ void Enemy::Draw(Graphics & gfx)
 	gfx.DrawCircle(enemy.GetBulletSpawnPoint(), Soldier::GetRadius()*0.25f, Colors::Red);
 	gfx.DrawLine(enemy.GetPos(), enemy.GetBulletSpawnPoint(), Colors::White);
 	
-
+	/*
 	for (int i = 0; i < indexTrackingPoints; i++)
 	{
 		gfx.DrawCircle(trackingPoints[i], 5.0f, Colors::Magenta);
@@ -37,6 +39,8 @@ void Enemy::Draw(Graphics & gfx)
 			gfx.DrawLine(trackingPoints[i], trackingPoints[i+1], Colors::White);
 		}
 	}
+	*/
+	
 	
 }
 

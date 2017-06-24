@@ -34,7 +34,7 @@ public:
 	bool IsAlive() const;
 	bool IsActive() const;
 	float shootCooldownLeft = 0.0f;
-	static constexpr float shootCooldown = 0.55f;
+	static constexpr float shootCooldown = 0.95f;
 	
 private:
 	bool active = false;
@@ -43,7 +43,7 @@ private:
 	Vec2 dir;
 	Vec2 startPos;
 	Vec2 startDir;
-	float speed = 100.0f;
+	float speed = 200.0f;
 	static constexpr float radius = 12.0f;
 };
 

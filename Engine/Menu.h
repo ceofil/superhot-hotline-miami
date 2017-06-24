@@ -5,6 +5,7 @@
 #include "Soldier.h"
 #include "RectF.h"
 #include "Level.h"
+#include "Bullet.h"
 
 class Menu
 {
@@ -12,7 +13,8 @@ public:
 	Menu() = default;
 	Menu(Enemy* enemies_in, int maxNumberEnemies_in, int& currNumberEnemies_in,
 		 RectF* walls_in, int maxNumberWalls_in, int& currNumberWalls_in,
-		 Soldier& player);
+		 Soldier& player_in,
+		Bullet * playerBullets, int maxNumberBullets, Bullet * enemyBullets, int maxNumberBulletsEnemies);
 	void Draw(Graphics& gfx, Mouse& mouse, Text& txt);
 	void HandleMousePressed(Mouse& mouse);
 	void AddWall(Mouse& mouse);
@@ -20,6 +22,7 @@ public:
 	void AddEnemy(Mouse& mouse);
 	void RemoveEnemy(Mouse& mouse);
 	void PlacePlayer(Mouse& mouse);
+	void RestartGame();
 
 private:
 
@@ -54,6 +57,11 @@ private:
 	
 	Soldier& player;
 	bool playerPlaced = false;
+
+	Bullet* playerBullets;
+	Bullet* enemyBullets;
+	int maxNumberBullets;
+	int maxNumberBulletsEnemies;
 
 	Level level;
 

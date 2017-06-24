@@ -26,11 +26,11 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	bulletShotSound(L"bulletShot.wav"),
-	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player),
+	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player, playerBullets, nBullets, enemyBullets, nBulletsForEnemies),
 	txt(gfx, 0, 0, 1)
 {
 	player.Set(Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f));
-	resetGame();
+	menu.RestartGame();
 }
 
 void Game::Go()
@@ -62,7 +62,7 @@ void Game::UpdateModel(float dt)
 			}
 			if (player.IsAlive() == false)
 			{
-				resetGame();
+				menu.RestartGame();
 			}
 
 			player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
@@ -176,7 +176,7 @@ void Game::HandleInput()
 			switch (e.GetCode())
 			{
 			case 0x52:
-				resetGame();
+				menu.RestartGame();
 				break;
 			case VK_ESCAPE:
 				if (menu.editorState == Menu::EditorState::nothing)
@@ -219,27 +219,5 @@ void Game::DrawEnemies()
 	}
 }
 
-void Game::resetGame()
-{
-	player.Respawn();
-	for (int i = 0; i < currNumberEnemies; i++)
-	{
-		enemies[i].Respawn(); 
-	}
-	for (int i = 0; i < nBullets; i++)
-	{
-		if (playerBullets[i].IsSpawned())
-		{
-			playerBullets[i].Destroy();
-		}
-	}
-	for (int i = 0; i < nBulletsForEnemies; i++)
-	{
-		if (enemyBullets[i].IsSpawned())
-		{
-			enemyBullets[i].Destroy();
-		}
-	}
-}
 
 

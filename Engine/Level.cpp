@@ -58,7 +58,7 @@ void Level::RemoveWallEntry(Vec2 cursor)
 
 void Level::AddEnemyEntry(Vec2 pos, float angle)
 {
-	enemyEntries[currNumber_EnemyEntries++] = SoldierEntry( pos,float(angle) );
+	enemyEntries[currNumber_EnemyEntries++] = SoldierEntry( pos,int(angle) );
 }
 
 void Level::RemoveEnemyEntry(Vec2 cursor)
@@ -79,7 +79,7 @@ void Level::RemoveEnemyEntry(Vec2 cursor)
 
 void Level::SetPlayerEntry(Vec2 pos, float angle)
 {
-	playerEntry = SoldierEntry(pos, float(angle));
+	playerEntry = SoldierEntry(pos, int(angle));
 }
 
 void Level::Load(const char * filename_in)

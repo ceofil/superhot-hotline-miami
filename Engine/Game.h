@@ -50,8 +50,6 @@ private:
 	void DrawWalls();
 	void UpdateEnemies(float dt);
 	void DrawEnemies();
-
-	void resetGame();
 	/********************************/
 private:
 	MainWindow& wnd;
