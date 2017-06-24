@@ -23,11 +23,11 @@ private:
 		RectF rect;
 	}; 
 	
-	class EnemyEntry
+	class SoldierEntry
 	{
 	public:
-		EnemyEntry() = default;
-		EnemyEntry(Vec2 pos_in, int angle_in);
+		SoldierEntry() = default;
+		SoldierEntry(Vec2 pos_in, int angle_in);
 		void Serialize(std::ofstream& out) const;
 		void Deserialize(std::ifstream& in);
 		Vec2 GetPos() const;
@@ -45,17 +45,21 @@ public:
 	void AddEnemyEntry(Vec2 pos, float angle);
 	void RemoveEnemyEntry(Vec2 cursor);
 
+	void SetPlayerEntry(Vec2 pos, float angle);
+
 	void Load( const char* filename_in );
 	void Save( const char* filename_out );
-	void Implement( RectF* walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies);
+	void Implement( RectF* walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies, Soldier& player);
 	void Draw(Graphics& gfx);
+	void DrawPlayerEntry(Graphics& gfx);
 private:
 	static constexpr int maxNumberWalls = 50;
 	WallEntry wallEntries[maxNumberWalls];
 	int currNumber_WallEntries = 0;
 
-	static constexpr int maxNumberEnemies = 50;
-	EnemyEntry enemyEntries[maxNumberEnemies];
+	static constexpr int maxNumberEnemies = 100;
+	SoldierEntry enemyEntries[maxNumberEnemies];
 	int currNumber_EnemyEntries = 0;
+	SoldierEntry playerEntry;
 
 };

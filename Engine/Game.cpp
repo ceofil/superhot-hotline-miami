@@ -29,9 +29,7 @@ Game::Game(MainWindow& wnd)
 	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player),
 	txt(gfx, 0, 0, 1)
 {
-
-	player.Set(Vec2(600.0f, 820.0f), Vec2(0.0f, 1.0f));
-
+	player.Set(Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f));
 	resetGame();
 }
 
@@ -84,6 +82,11 @@ void Game::UpdateModel(float dt)
 				case Menu::EditorState::addEnemy:
 				{
 					menu.AddEnemy(wnd.mouse);
+					break;
+				}
+				case Menu::EditorState::placePlayer:
+				{
+					menu.PlacePlayer(wnd.mouse);
 					break;
 				}
 			}

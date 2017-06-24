@@ -42,12 +42,12 @@ private:
 	void ResetTrackingPoints();
 
 private:
-	static Vec2 AngleToVec2(float angle);
 	static constexpr float pi = 3.14159265f;
 	static constexpr float rotationSpeed = 175.0f;
 	float angle;
 	float startAngle;
 public:
+	static Vec2 AngleToVec2(float angle);
 	static float Vec2ToAngle(Vec2 vec);
 	static void NormalizeAngle(float & angle);
 };

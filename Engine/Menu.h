@@ -19,6 +19,7 @@ public:
 	void RemoveWall(Mouse& mouse);
 	void AddEnemy(Mouse& mouse);
 	void RemoveEnemy(Mouse& mouse);
+	void PlacePlayer(Mouse& mouse);
 
 private:
 
@@ -35,6 +36,7 @@ private:
 
 	Button addEnemy;
 	Button removeEnemy;
+	Button placePlayer;
 
 	Enemy* enemies;
 	int maxNumberEnemies;
@@ -51,6 +53,7 @@ private:
 	RectF rectBuffer;
 	
 	Soldier& player;
+	bool playerPlaced = false;
 
 	Level level;
 
@@ -67,7 +70,8 @@ public:
 		addWall,
 		removeWall,
 		addEnemy,
-		removeEnemy
+		removeEnemy,
+		placePlayer
 	};
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;

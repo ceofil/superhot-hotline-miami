@@ -58,7 +58,7 @@ void Level::RemoveWallEntry(Vec2 cursor)
 
 void Level::AddEnemyEntry(Vec2 pos, float angle)
 {
-	enemyEntries[currNumber_EnemyEntries++] = EnemyEntry( pos,float(angle) );
+	enemyEntries[currNumber_EnemyEntries++] = SoldierEntry( pos,float(angle) );
 }
 
 void Level::RemoveEnemyEntry(Vec2 cursor)
@@ -77,9 +77,15 @@ void Level::RemoveEnemyEntry(Vec2 cursor)
 	}
 }
 
+void Level::SetPlayerEntry(Vec2 pos, float angle)
+{
+	playerEntry = SoldierEntry(pos, float(angle));
+}
+
 void Level::Load(const char * filename_in)
 {
 	std::ifstream in(filename_in, std::ios::binary);
+	playerEntry.Deserialize(in);
 	in.read(reinterpret_cast<char*>(&currNumber_WallEntries), sizeof(currNumber_WallEntries));
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
@@ -95,6 +101,7 @@ void Level::Load(const char * filename_in)
 void Level::Save(const char * filename_out)
 {
 	std::ofstream out(filename_out, std::ios::binary);
+	playerEntry.Serialize(out);
 	out.write(reinterpret_cast<char*>(&currNumber_WallEntries), sizeof(currNumber_WallEntries));
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
@@ -108,8 +115,9 @@ void Level::Save(const char * filename_out)
 	}
 }
 
-void Level::Implement(RectF * walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies)
+void Level::Implement(RectF * walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies, Soldier& player)
 {
+	player.Set(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle()) ));
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
 		walls[i] = wallEntries[i].GetRect();
@@ -135,14 +143,19 @@ void Level::Draw(Graphics & gfx)
 	}
 }
 
-Level::EnemyEntry::EnemyEntry(Vec2 pos_in, int angle_in)
+void Level::DrawPlayerEntry(Graphics & gfx)
+{
+	Soldier(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle()))).Draw(gfx, Color(100, 150, 255));
+}
+
+Level::SoldierEntry::SoldierEntry(Vec2 pos_in, int angle_in)
 	:
 	pos(pos_in),
 	angle(angle_in)
 {
 }
 
-void Level::EnemyEntry::Serialize(std::ofstream & out) const
+void Level::SoldierEntry::Serialize(std::ofstream & out) const
 {
 	int x = int(pos.x);
 	int y = int(pos.y);
@@ -152,7 +165,7 @@ void Level::EnemyEntry::Serialize(std::ofstream & out) const
 	out.write(reinterpret_cast<const char*>(&angle), sizeof(angle));
 }
 
-void Level::EnemyEntry::Deserialize(std::ifstream & in)
+void Level::SoldierEntry::Deserialize(std::ifstream & in)
 {
 	int x, y, angle;
 
@@ -162,18 +175,18 @@ void Level::EnemyEntry::Deserialize(std::ifstream & in)
 	pos = Vec2(float(x), float(y));
 }
 
-Vec2 Level::EnemyEntry::GetPos() const
+Vec2 Level::SoldierEntry::GetPos() const
 {
 	return pos;
 }
 
-float Level::EnemyEntry::GetAngle() const
+float Level::SoldierEntry::GetAngle() const
 {
 	return float(angle);
 }
 
-RectF Level::EnemyEntry::GetRect() const
+RectF Level::SoldierEntry::GetRect() const
 {
-	return RectF::FromCenter(pos, Soldier::GetRadius(), Soldier::GetRadius());
+	return RectF::FromCenter(pos, Soldier::GetRadius(), Soldier::GetRadius() );
 }
 

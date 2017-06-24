@@ -31,7 +31,8 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 
 	addEnemy = Button(RectF::FromCenter(100.0f + width * 2.0f, sh - 50.0f, width, 50.0f), "add enemy", 2, Color(165, 165, 0));
 	removeEnemy = Button(RectF::FromCenter(100.0f + width * 3.0f, sh - 50.0f, width, 50.0f), "remove enemy", 2, Color(0, 165, 165));
-	
+	placePlayer = Button(RectF::FromCenter(100.0f + width * 4.0f, sh - 50.0f, width, 50.0f), "place player", 2, Color(200, 100, 50));
+	level.SetPlayerEntry(player.GetPos(), 180.0f);
 }
 
 void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
@@ -49,6 +50,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	case GameState::levelEditor:
 	{
 		level.Draw(gfx);
+		level.DrawPlayerEntry(gfx);
 		switch (editorState)
 		{
 			case EditorState::nothing:
@@ -62,6 +64,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 
 				addEnemy.Draw(gfx, mouse, txt);
 				removeEnemy.Draw(gfx, mouse, txt);
+				placePlayer.Draw(gfx, mouse, txt);
 				break;
 			}
 			case EditorState::addWall:
@@ -82,6 +85,11 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 				{
 					Enemy(posBuffer, angleBuffer).Draw(gfx);
 				}
+				break;
+			}
+			case EditorState::placePlayer:
+			{
+				Soldier(posBuffer, Enemy::AngleToVec2(angleBuffer)).Draw(gfx, Color(100, 150, 255));
 				break;
 			}
 			case EditorState::removeWall:
@@ -137,7 +145,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			}
 			if (implement.IsMouseOver(mouse))
 			{
-				level.Implement(walls, currNumberWalls, enemies, currNumberEnemies);
+				level.Implement(walls, currNumberWalls, enemies, currNumberEnemies, player);
 			}
 
 			if (addWall.IsMouseOver(mouse))
@@ -155,6 +163,10 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			if (removeEnemy.IsMouseOver(mouse))
 			{
 				editorState = EditorState::removeEnemy;
+			}
+			if (placePlayer.IsMouseOver(mouse))
+			{
+				editorState = EditorState::placePlayer;
 			}
 			break;
 		}
@@ -248,4 +260,29 @@ void Menu::RemoveEnemy(Mouse & mouse)
 {
 	Vec2 cursor = mouse.GetPosVec2();
 	level.RemoveEnemyEntry(cursor);
+}
+
+void Menu::PlacePlayer(Mouse & mouse)
+{
+	if (mouse.LeftIsPressed())
+	{
+		if (!playerPlaced)
+		{
+			playerPlaced = true;
+
+			posBuffer = mouse.GetPosVec2();
+		}
+		else
+		{
+			angleBuffer = Enemy::Vec2ToAngle((mouse.GetPosVec2() - posBuffer).GetNormalized());
+		}
+
+
+	}
+	else if (playerPlaced)
+	{
+		playerPlaced = false;
+		level.SetPlayerEntry(posBuffer, angleBuffer);
+		editorState = EditorState::nothing;
+	}
 }

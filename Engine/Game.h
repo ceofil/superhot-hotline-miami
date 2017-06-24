@@ -66,7 +66,7 @@ private:
 
 	Soldier player;
 
-	static constexpr int nEnemies = 8;
+	static constexpr int nEnemies = 100;
 	Enemy enemies[nEnemies];
 	int currNumberEnemies = 0;
 
