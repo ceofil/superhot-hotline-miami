@@ -56,6 +56,27 @@ void Level::RemoveWallEntry(Vec2 cursor)
 	}
 }
 
+void Level::AddEnemyEntry(Vec2 pos, float angle)
+{
+	enemyEntries[currNumber_EnemyEntries++] = EnemyEntry( pos,float(angle) );
+}
+
+void Level::RemoveEnemyEntry(Vec2 cursor)
+{
+	for (int i = 0; i < currNumber_EnemyEntries; i++)
+	{
+		if (enemyEntries[i].GetRect().ContainsPoint(cursor))
+		{
+			for (int j = i; j + 1 < currNumber_EnemyEntries; j++)
+			{
+				enemyEntries[j] = enemyEntries[j + 1];
+			}
+			currNumber_EnemyEntries--;
+			break;
+		}
+	}
+}
+
 void Level::Load(const char * filename_in)
 {
 	std::ifstream in(filename_in, std::ios::binary);
@@ -63,6 +84,11 @@ void Level::Load(const char * filename_in)
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
 		wallEntries[i].Deserialize(in);
+	}
+	in.read(reinterpret_cast<char*>(&currNumber_EnemyEntries), sizeof(currNumber_EnemyEntries));
+	for (int i = 0; i < currNumber_EnemyEntries; i++)
+	{
+		enemyEntries[i].Deserialize(in);
 	}
 }
 
@@ -74,15 +100,27 @@ void Level::Save(const char * filename_out)
 	{
 		wallEntries[i].Serialize(out);
 	}
+
+	out.write(reinterpret_cast<char*>(&currNumber_EnemyEntries), sizeof(currNumber_EnemyEntries));
+	for (int i = 0; i < currNumber_EnemyEntries; i++)
+	{
+		enemyEntries[i].Serialize(out);
+	}
 }
 
-void Level::Implement(RectF * walls, int& currNumberWalls)
+void Level::Implement(RectF * walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies)
 {
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
 		walls[i] = wallEntries[i].GetRect();
 	}
 	currNumberWalls = currNumber_WallEntries;
+
+	for (int i = 0; i < currNumber_EnemyEntries; i++)
+	{
+		enemies[i].Set( enemyEntries[i].GetPos(), float(enemyEntries[i].GetAngle()) );
+	}
+	currNumberEnemies = currNumber_EnemyEntries;
 }
 
 void Level::Draw(Graphics & gfx)
@@ -91,4 +129,51 @@ void Level::Draw(Graphics & gfx)
 	{
 		gfx.DrawRectPoints(wallEntries[i].GetRect(),Colors::LightGray);
 	}
+	for (int i = 0; i < currNumber_EnemyEntries; i++)
+	{
+		Enemy(enemyEntries[i].GetPos(), float(enemyEntries[i].GetAngle())).Draw(gfx);
+	}
 }
+
+Level::EnemyEntry::EnemyEntry(Vec2 pos_in, int angle_in)
+	:
+	pos(pos_in),
+	angle(angle_in)
+{
+}
+
+void Level::EnemyEntry::Serialize(std::ofstream & out) const
+{
+	int x = int(pos.x);
+	int y = int(pos.y);
+
+	out.write(reinterpret_cast<const char*>(&x), sizeof(x));
+	out.write(reinterpret_cast<const char*>(&y), sizeof(y));
+	out.write(reinterpret_cast<const char*>(&angle), sizeof(angle));
+}
+
+void Level::EnemyEntry::Deserialize(std::ifstream & in)
+{
+	int x, y, angle;
+
+	in.read(reinterpret_cast<char*>(&x), sizeof(x));
+	in.read(reinterpret_cast<char*>(&y), sizeof(y));
+	in.read(reinterpret_cast<char*>(&angle), sizeof(angle));
+	pos = Vec2(float(x), float(y));
+}
+
+Vec2 Level::EnemyEntry::GetPos() const
+{
+	return pos;
+}
+
+float Level::EnemyEntry::GetAngle() const
+{
+	return float(angle);
+}
+
+RectF Level::EnemyEntry::GetRect() const
+{
+	return RectF::FromCenter(pos, Soldier::GetRadius(), Soldier::GetRadius());
+}
+

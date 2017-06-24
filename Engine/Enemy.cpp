@@ -23,9 +23,9 @@ void Enemy::Respawn()
 
 void Enemy::Draw(Graphics & gfx)
 {
-	gfx.DrawCircle(enemy.GetPos(), enemy.GetRadius(), Color(255,150,150));
-	gfx.DrawCircleStrokeOnly(enemy.GetPos(), enemy.GetRadius(), 1.0f, Color(255,50,50));
-	gfx.DrawCircle(enemy.GetBulletSpawnPoint(), enemy.GetRadius()*0.25f, Colors::Red);
+	gfx.DrawCircle(enemy.GetPos(), Soldier::GetRadius(), Color(255,150,150));
+	gfx.DrawCircleStrokeOnly(enemy.GetPos(), Soldier::GetRadius(), 1.0f, Color(255,50,50));
+	gfx.DrawCircle(enemy.GetBulletSpawnPoint(), Soldier::GetRadius()*0.25f, Colors::Red);
 	gfx.DrawLine(enemy.GetPos(), enemy.GetBulletSpawnPoint(), Colors::White);
 	
 
@@ -98,7 +98,7 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumb
 	{
 		AddTrackingPoint(player.GetPos());
 	}
-	if (Vec2(trackingPoints[0] - enemy.GetPos()).GetLength() > enemy.GetRadius())
+	if (Vec2(trackingPoints[0] - enemy.GetPos()).GetLength() > Soldier::GetRadius())
 	{
 		const Vec2 dir_in = Vec2(trackingPoints[0] - enemy.GetPos()).GetNormalized();
 

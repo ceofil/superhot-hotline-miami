@@ -17,21 +17,31 @@ public:
 	void HandleMousePressed(Mouse& mouse);
 	void AddWall(Mouse& mouse);
 	void RemoveWall(Mouse& mouse);
+	void AddEnemy(Mouse& mouse);
+	void RemoveEnemy(Mouse& mouse);
 
 private:
 
 	Button start;
-	Button save;
-	Button implement;
 	Button load;
 	Button editor;
+
+	Button back;
+	Button save;
+	Button implement;
+
 	Button addWall;
 	Button removeWall;
-	Button back;
+
+	Button addEnemy;
+	Button removeEnemy;
 
 	Enemy* enemies;
 	int maxNumberEnemies;
 	int& currNumberEnemies;
+	bool enemyPlaced = false;
+	Vec2 posBuffer;
+	float angleBuffer;
 
 	RectF* walls;
 	int maxNumberWalls;
@@ -54,9 +64,10 @@ public:
 	enum class EditorState
 	{
 		nothing,
-		addEnemy,
 		addWall,
-		removeWall
+		removeWall,
+		addEnemy,
+		removeEnemy
 	};
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;

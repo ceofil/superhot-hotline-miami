@@ -30,7 +30,7 @@ public:
 	RectF GetRect() const;
 	Vec2 GetPos() const;
 	Vec2 GetDir() const;
-	float GetRadius() const;
+	static float GetRadius();
 	bool IsAlive() const;
 	bool IsActive() const;
 	float shootCooldownLeft = 0.0f;

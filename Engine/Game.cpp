@@ -29,31 +29,8 @@ Game::Game(MainWindow& wnd)
 	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player),
 	txt(gfx, 0, 0, 1)
 {
-	
-	/*
-	walls[currNumberWalls++] = RectF(100.0f, 200.0f, 100.0f, 200.0f);
-	walls[currNumberWalls++] = RectF(300.0f, 400.0f, 100.0f, 200.0f);
-	walls[currNumberWalls++] = RectF(500.0f, 600.0f, 200.0f, 350.0f);
-	walls[currNumberWalls++] = RectF(100.0f, 300.0f, 300.0f, 350.0f);
 
-	menu.AddRect(walls[0]);
-	menu.AddRect(walls[1]);
-	menu.AddRect(walls[2]);
-	menu.AddRect(walls[3]);
-	*/
-
-	enemies[currNumberEnemies++].Set(Vec2(150.0f, 450.0f), 180.0f);
-	enemies[currNumberEnemies++].Set(Vec2(250.0f, 250.0f), 90.0f);
-	/*
-	enemies[currNumberEnemies++].Set(Vec2(350.0f, 300.0f), 120.0f);
-	enemies[currNumberEnemies++].Set(Vec2(450.0f, 450.0f), 90.0f);
-	enemies[currNumberEnemies++].Set(Vec2(550.0f, 450.0f), 120.0f);
-	enemies[currNumberEnemies++].Set(Vec2(550.0f, 50.0f), 180.0f);
-	enemies[currNumberEnemies++].Set(Vec2(250.0f, 150.0f), 90.0f);
-	enemies[currNumberEnemies++].Set(Vec2(150.0f, 250.0f), 180.0f);
-	*/
-
-	player.Set(Vec2(50.0f, 50.0f), Vec2(0.0f, 0.0f));
+	player.Set(Vec2(600.0f, 820.0f), Vec2(0.0f, 1.0f));
 
 	resetGame();
 }
@@ -106,6 +83,7 @@ void Game::UpdateModel(float dt)
 				}
 				case Menu::EditorState::addEnemy:
 				{
+					menu.AddEnemy(wnd.mouse);
 					break;
 				}
 			}

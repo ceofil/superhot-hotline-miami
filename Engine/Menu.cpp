@@ -28,6 +28,9 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 
 	addWall = Button(RectF::FromCenter(100.0f, sh-50.0f, width, 50.0f), "add wall", 2, Color(165, 165, 0));
 	removeWall = Button(RectF::FromCenter(100.0f + width, sh - 50.0f, width, 50.0f), "remove wall", 2, Color(0, 165, 165));
+
+	addEnemy = Button(RectF::FromCenter(100.0f + width * 2.0f, sh - 50.0f, width, 50.0f), "add enemy", 2, Color(165, 165, 0));
+	removeEnemy = Button(RectF::FromCenter(100.0f + width * 3.0f, sh - 50.0f, width, 50.0f), "remove enemy", 2, Color(0, 165, 165));
 	
 }
 
@@ -56,6 +59,9 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 
 				addWall.Draw(gfx, mouse, txt);
 				removeWall.Draw(gfx, mouse, txt);
+
+				addEnemy.Draw(gfx, mouse, txt);
+				removeEnemy.Draw(gfx, mouse, txt);
 				break;
 			}
 			case EditorState::addWall:
@@ -66,17 +72,27 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 				}
 				break;
 			}
+			case EditorState::addEnemy:
+			{
+				if (!enemyPlaced)
+				{
+					Enemy(mouse.GetPosVec2(), 180.0f).Draw(gfx);
+				}
+				else
+				{
+					Enemy(posBuffer, angleBuffer).Draw(gfx);
+				}
+				break;
+			}
 			case EditorState::removeWall:
+			case EditorState::removeEnemy:
 			{
 				Vec2 cursor = mouse.GetPosVec2();
 				Vec2 dim = Vec2(5.0f,5.0f);
 				gfx.DrawRectDiagonals(RectF(cursor-dim,cursor+dim), Colors::Red);
 				break;
 			}
-			case EditorState::addEnemy:
-			{
-				break;
-			}
+			
 		}
 		break;
 	}
@@ -93,14 +109,6 @@ void Menu::HandleMousePressed(Mouse& mouse)
 		if (start.IsMouseOver(mouse))
 		{
 			gameState = GameState::gameStarted;
-		}
-		if (save.IsMouseOver(mouse))
-		{
-			level.Save("level.txt");
-		}
-		if (implement.IsMouseOver(mouse))
-		{
-			level.Implement(walls, currNumberWalls);
 		}
 		if (load.IsMouseOver(mouse))
 		{
@@ -129,8 +137,9 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			}
 			if (implement.IsMouseOver(mouse))
 			{
-				level.Implement(walls, currNumberWalls);
+				level.Implement(walls, currNumberWalls, enemies, currNumberEnemies);
 			}
+
 			if (addWall.IsMouseOver(mouse))
 			{
 				editorState = EditorState::addWall;
@@ -138,6 +147,14 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			if (removeWall.IsMouseOver(mouse))
 			{
 				editorState = EditorState::removeWall;
+			}
+			if (addEnemy.IsMouseOver(mouse))
+			{
+				editorState = EditorState::addEnemy;
+			}
+			if (removeEnemy.IsMouseOver(mouse))
+			{
+				editorState = EditorState::removeEnemy;
 			}
 			break;
 		}
@@ -147,8 +164,10 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			editorState = EditorState::nothing;
 			break;
 		}
-		case EditorState::addEnemy:
+		case EditorState::removeEnemy:
 		{
+			RemoveEnemy(mouse);
+			editorState = EditorState::nothing;
 			break;
 		}
 		}
@@ -193,4 +212,40 @@ void Menu::RemoveWall(Mouse & mouse)
 {
 	Vec2 cursor = mouse.GetPosVec2();
 	level.RemoveWallEntry( cursor );
+}
+
+void Menu::AddEnemy(Mouse & mouse)
+{
+	if (mouse.LeftIsPressed())
+	{
+		if (!enemyPlaced)
+		{
+			enemyPlaced = true;
+			
+			posBuffer = mouse.GetPosVec2();
+
+			if (currNumberEnemies + 1 < maxNumberEnemies)
+			{
+				currNumberEnemies++;
+			}
+		}
+		else
+		{
+			angleBuffer = Enemy::Vec2ToAngle((mouse.GetPosVec2() - posBuffer ).GetNormalized());
+		}
+
+
+	}
+	else if (enemyPlaced)
+	{
+		enemyPlaced = false;
+		level.AddEnemyEntry( posBuffer,angleBuffer );
+		editorState = EditorState::nothing;
+	}
+}
+
+void Menu::RemoveEnemy(Mouse & mouse)
+{
+	Vec2 cursor = mouse.GetPosVec2();
+	level.RemoveEnemyEntry(cursor);
 }

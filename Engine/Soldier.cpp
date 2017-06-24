@@ -206,7 +206,7 @@ Vec2 Soldier::GetDir() const
 	return dir;
 }
 
-float Soldier::GetRadius() const
+float Soldier::GetRadius()
 {
 	return radius;
 }
