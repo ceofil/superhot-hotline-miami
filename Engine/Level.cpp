@@ -167,7 +167,7 @@ void Level::SoldierEntry::Serialize(std::ofstream & out) const
 
 void Level::SoldierEntry::Deserialize(std::ifstream & in)
 {
-	int x, y, angle;
+	int x, y;
 
 	in.read(reinterpret_cast<char*>(&x), sizeof(x));
 	in.read(reinterpret_cast<char*>(&y), sizeof(y));
@@ -180,9 +180,9 @@ Vec2 Level::SoldierEntry::GetPos() const
 	return pos;
 }
 
-float Level::SoldierEntry::GetAngle() const
+int Level::SoldierEntry::GetAngle() const
 {
-	return float(angle);
+	return angle;
 }
 
 RectF Level::SoldierEntry::GetRect() const

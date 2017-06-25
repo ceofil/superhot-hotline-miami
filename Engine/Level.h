@@ -31,7 +31,7 @@ private:
 		void Serialize(std::ofstream& out) const;
 		void Deserialize(std::ifstream& in);
 		Vec2 GetPos() const;
-		float GetAngle() const;
+		int GetAngle() const;
 		RectF GetRect() const;
 	private:
 		Vec2 pos;
