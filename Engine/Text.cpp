@@ -612,7 +612,7 @@ void Text::drawString(char string[], int xpoz, int ypoz, Color c)
 
 void Text::drawStringCenter(char string[], int xpoz, int ypoz, Color c)
 {
-	drawString(string, xpoz - strlen(string) * 5 / 2, ypoz - 3, c);
+	drawString(string, xpoz - int(strlen(string)) * 5 / 2, ypoz - 3, c);
 }
 
 void Text::drawStringSized(char string[], int xScreen, int yScreen, int size, Color c)
@@ -634,7 +634,7 @@ void Text::drawStringSized(char string[], int xScreen, int yScreen, int size, Co
 
 void Text::drawStringSizedCenter(char string[], int xScreen, int yScreen, int size, Color c)
 {
-	xScreen -= strlen(string) * size * 5 / 2;
+	xScreen -= int(strlen(string)) * size * 5 / 2;
 	yScreen -= size * 7 / 2;
 	drawStringSized(string, xScreen, yScreen, size, c);
 }

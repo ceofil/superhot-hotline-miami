@@ -155,7 +155,7 @@ void Soldier::HandleBullets(Bullet otherBullets[], int nOtherBullets)
 	{
 		if (otherBullets[i].IsSpawned())
 		{
-			if (Vec2(otherBullets[i].GetPosition() - pos).GetLength() <= radius )
+			if (Vec2(otherBullets[i].GetPosition() - pos).GetLengthSq() <= radiusSq )
 			{
 				alive = false;
 				otherBullets[i].Destroy();
@@ -209,6 +209,11 @@ Vec2 Soldier::GetDir() const
 float Soldier::GetRadius()
 {
 	return radius;
+}
+
+float Soldier::GetRadiusSq()
+{
+	return radiusSq;
 }
 
 bool Soldier::IsAlive() const

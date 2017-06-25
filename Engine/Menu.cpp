@@ -11,10 +11,14 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	walls(walls_in),
 	maxNumberWalls(maxNumberWalls_in),
 	currNumberWalls(currNumberWalls_in),
-	player(player_in)
+	player(player_in),
+	playerBullets(playerBullets),
+	maxNumberBullets(maxNumberBullets),
+	enemyBullets(enemyBullets),
+	maxNumberBulletsEnemies(maxNumberBulletsEnemies)
 {
-	static constexpr float sw = Graphics::ScreenWidth;
-	static constexpr float sh = Graphics::ScreenHeight;
+	static constexpr float sw = float(Graphics::ScreenWidth);
+	static constexpr float sh = float(Graphics::ScreenHeight);
 	static constexpr float wCenter = sw / 2; 
 	static constexpr float hCenter = sh / 2;
 	static constexpr float width = 150.0f;

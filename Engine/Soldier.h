@@ -31,6 +31,7 @@ public:
 	Vec2 GetPos() const;
 	Vec2 GetDir() const;
 	static float GetRadius();
+	static float GetRadiusSq();
 	bool IsAlive() const;
 	bool IsActive() const;
 	float shootCooldownLeft = 0.0f;
@@ -45,5 +46,6 @@ private:
 	Vec2 startDir;
 	float speed = 200.0f;
 	static constexpr float radius = 12.0f;
+	static constexpr float radiusSq = radius * radius;
 };
 

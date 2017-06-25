@@ -60,20 +60,20 @@ void Enemy::Update(const Soldier & player,
 
 			AddTrackingPoint(player.GetPos());
 
-			float wantedAngle = Vec2ToAngle(  player.GetPos() -  enemy.GetPos());
-
-			RotateToward(wantedAngle, dt);
+			const float wantedAngle = Vec2ToAngle(  player.GetPos() -  enemy.GetPos() );
 
 			if (std::abs(wantedAngle - angle) < 1.0f)
 			{
 				enemy.Shoot(bullets, nBullets, bulletShotSound);
 				TrackTarget(player, walls, currNumberWalls, dt * 0.5f);
 			}
+			else
+			{
+				RotateToward(wantedAngle, dt);
+			}
 		}
 		else
 		{
-			
-
 			TrackTarget(player, walls, currNumberWalls, dt);
 		}
 	}
@@ -102,7 +102,7 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumb
 	{
 		AddTrackingPoint(player.GetPos());
 	}
-	if (Vec2(trackingPoints[0] - enemy.GetPos()).GetLength() > Soldier::GetRadius())
+	if (Vec2(trackingPoints[0] - enemy.GetPos()).GetLengthSq() > Soldier::GetRadiusSq())
 	{
 		const Vec2 dir_in = Vec2(trackingPoints[0] - enemy.GetPos()).GetNormalized();
 
@@ -196,7 +196,7 @@ Vec2 Enemy::AngleToVec2(float angle)
 float Enemy::Vec2ToAngle(Vec2 vec)
 {
 	vec.Normalize();
-	float angle = -asin(vec.y) * 180.0 / pi;
+	float angle = -asin(vec.y) * 180.0f / pi;
 
 	if (vec.x > 0) return angle;
 	else return 180.0f - angle;
