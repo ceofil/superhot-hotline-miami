@@ -26,7 +26,7 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd),
 	bulletShotSound(L"bulletShot.wav"),
-	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player, playerBullets, nBullets, enemyBullets, nBulletsForEnemies),
+	menu(enemies, maxNumberEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player, playerBullets, maxNumberPlayerBullets, enemyBullets, maxNumberEnemyBullets),
 	txt(gfx, 0, 0, 1)
 {
 	menu.RestartGame();
@@ -57,16 +57,16 @@ void Game::UpdateModel(float dt)
 		{
 			if (player.IsActive() == false)
 			{
-				dt = dt / 5.0f;
+				dt = dt * 0.2f;
 			}
 			if (player.IsAlive() == false)
 			{
 				menu.gameState = Menu::GameState::playerDied;
 			}
 
-			player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
-			UpdateEnemies(dt);
+			player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, maxNumberPlayerBullets, enemyBullets, maxNumberEnemyBullets, dt);
 			UpdateBullets(dt);
+			UpdateEnemies(dt);
 			break;
 		}
 		case Menu::GameState::levelEditor:
@@ -101,56 +101,20 @@ void Game::ComposeFrame()
 {
 	if(menu.gameState == Menu::GameState::gameStarted || menu.gameState == Menu::GameState::playerDied)
 	{
-		player.Draw(gfx, Color(100, 150, 255));
-		DrawEnemies();
+		player.Draw(gfx);
 		DrawBullets();
+		DrawEnemies();
 		DrawWalls();
 	}
 	menu.Draw(gfx, wnd.mouse, txt);
 }
 
 
-void Game::UpdateBullets(float dt)
-{
-	for (int i = 0; i < nBullets; i++)
-	{
-		if ( playerBullets[i].IsSpawned() )
-		{
-			playerBullets[i].Update(dt, walls, currNumberWalls, bulletShotSound);
-		}
-	}
-	for (int i = 0; i < nBulletsForEnemies; i++)
-	{
-		if (enemyBullets[i].IsSpawned())
-		{
-			enemyBullets[i].Update(dt, walls, currNumberWalls, bulletShotSound);
-		}
-	}
-}
-
-void Game::DrawBullets()
-{
-	for (int i = 0; i < nBullets; i++)
-	{
-		if ( playerBullets[i].IsSpawned() )
-		{
-			playerBullets[i].Draw(gfx);
-		}
-	}
-	for (int i = 0; i < nBulletsForEnemies; i++)
-	{
-		if (enemyBullets[i].IsSpawned())
-		{
-			enemyBullets[i].Draw(gfx);
-		}
-	}
-}
-
 void Game::HandleInput()
 {
 	while (!wnd.mouse.IsEmpty())
 	{
-		
+
 		const Mouse::Event e = wnd.mouse.Read();
 		if (e.GetType() == Mouse::Event::Type::LRelease)
 		{
@@ -158,7 +122,7 @@ void Game::HandleInput()
 			{
 				if (wnd.mouse.IsInWindow())
 				{
-					player.Shoot(playerBullets, nBullets, bulletShotSound);
+					player.Shoot(playerBullets, maxNumberPlayerBullets, bulletShotSound);
 				}
 			}
 			else
@@ -189,11 +153,21 @@ void Game::HandleInput()
 	}
 }
 
-void Game::DrawWalls()
+void Game::UpdateBullets(float dt)
 {
-	for (int i = 0; i < currNumberWalls; i++)
+	for (int i = 0; i < maxNumberPlayerBullets; i++)
 	{
-		gfx.DrawRectPoints( walls[i], Colors::LightGray );
+		if ( playerBullets[i].IsSpawned() )
+		{
+			playerBullets[i].Update(dt, walls, currNumberWalls, bulletShotSound);
+		}
+	}
+	for (int i = 0; i < maxNumberEnemyBullets; i++)
+	{
+		if (enemyBullets[i].IsSpawned())
+		{
+			enemyBullets[i].Update(dt, walls, currNumberWalls, bulletShotSound);
+		}
 	}
 }
 
@@ -203,7 +177,25 @@ void Game::UpdateEnemies(float dt)
 	{
 		if (enemies[i].IsAlive())
 		{
-			enemies[i].Update(player, walls, currNumberWalls, enemyBullets, nBulletsForEnemies, playerBullets, nBullets, bulletShotSound, dt);
+			enemies[i].Update(player, walls, currNumberWalls, enemyBullets, maxNumberEnemyBullets, playerBullets, maxNumberPlayerBullets, bulletShotSound, dt);
+		}
+	}
+}
+
+void Game::DrawBullets()
+{
+	for (int i = 0; i < maxNumberPlayerBullets; i++)
+	{
+		if ( playerBullets[i].IsSpawned() )
+		{
+			playerBullets[i].Draw(gfx);
+		}
+	}
+	for (int i = 0; i < maxNumberEnemyBullets; i++)
+	{
+		if (enemyBullets[i].IsSpawned())
+		{
+			enemyBullets[i].Draw(gfx);
 		}
 	}
 }
@@ -219,5 +211,12 @@ void Game::DrawEnemies()
 	}
 }
 
+void Game::DrawWalls()
+{
+	for (int i = 0; i < currNumberWalls; i++)
+	{
+		gfx.DrawRectPoints(walls[i], Colors::LightGray);
+	}
+}
 
 

@@ -51,7 +51,6 @@ public:
 	void Save( const char* filename_out );
 	void Implement( RectF* walls, int& currNumberWalls, Enemy * enemies, int& currNumberEnemies, Soldier& player);
 	void Draw(Graphics& gfx);
-	void DrawPlayerEntry(Graphics& gfx);
 private:
 	static constexpr int maxNumberWalls = 50;
 	WallEntry wallEntries[maxNumberWalls];

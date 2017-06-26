@@ -40,8 +40,6 @@ void Enemy::Draw(Graphics & gfx)
 		}
 	}
 	*/
-	
-	
 }
 
 

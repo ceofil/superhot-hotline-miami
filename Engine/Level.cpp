@@ -141,13 +141,9 @@ void Level::Draw(Graphics & gfx)
 	{
 		Enemy(enemyEntries[i].GetPos(), float(enemyEntries[i].GetAngle())).Draw(gfx);
 	}
-	Soldier(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle())) ).Draw(gfx,Color(100,150,255));
+	Soldier(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle())) ).Draw(gfx);
 }
 
-void Level::DrawPlayerEntry(Graphics & gfx)
-{
-	Soldier(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle()))).Draw(gfx, Color(100, 150, 255));
-}
 
 Level::SoldierEntry::SoldierEntry(Vec2 pos_in, int angle_in)
 	:

@@ -3,7 +3,7 @@
 Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_in, 
 	RectF * walls_in, int maxNumberWalls_in, int & currNumberWalls_in, 
 	Soldier & player_in,
-	Bullet * playerBullets, int maxNumberBullets, Bullet * enemyBullets, int maxNumberBulletsEnemies)
+	Bullet * playerBullets, int maxNumberPlayerBullets, Bullet * enemyBullets, int maxNumberEnemyBullets)
 	:
 	enemies(enemies_in),
 	maxNumberEnemies(maxNumberEnemies_in),
@@ -13,9 +13,9 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	currNumberWalls(currNumberWalls_in),
 	player(player_in),
 	playerBullets(playerBullets),
-	maxNumberBullets(maxNumberBullets),
+	maxNumberPlayerBullets(maxNumberPlayerBullets),
 	enemyBullets(enemyBullets),
-	maxNumberBulletsEnemies(maxNumberBulletsEnemies)
+	maxNumberEnemyBullets(maxNumberEnemyBullets)
 {
 	const float sw = float(Graphics::ScreenWidth);
 	const float sh = float(Graphics::ScreenHeight);
@@ -102,7 +102,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 			{
 				if (playerPlaced)
 				{
-					Soldier(posBuffer, Enemy::AngleToVec2(angleBuffer)).Draw(gfx, Color(100, 150, 255));
+					Soldier(posBuffer, Enemy::AngleToVec2(angleBuffer)).Draw(gfx);
 				}
 				break;
 			}
@@ -318,11 +318,11 @@ void Menu::RestartGame()
 	{
 		enemies[i].Respawn();
 	}
-	for (int i = 0; i < maxNumberBullets; i++)
+	for (int i = 0; i < maxNumberPlayerBullets; i++)
 	{
 		playerBullets[i].Destroy();
 	}
-	for (int i = 0; i < maxNumberBulletsEnemies; i++)
+	for (int i = 0; i < maxNumberEnemyBullets; i++)
 	{
 		enemyBullets[i].Destroy();
 	}

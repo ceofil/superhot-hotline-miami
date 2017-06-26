@@ -82,6 +82,11 @@ void Soldier::Draw(Graphics & gfx, Color c)
 
 }
 
+void Soldier::Draw(Graphics & gfx)
+{
+	Draw(gfx, Color(100, 150, 255) );
+}
+
 void Soldier::Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound)
 {
 	if (shootCooldownLeft <= 0.0f)

@@ -44,12 +44,14 @@ private:
 	void UpdateModel(float dt);
 	/********************************/
 	/*  User Functions              */
-	void UpdateBullets(float dt);
-	void DrawBullets();
 	void HandleInput();
-	void DrawWalls();
+
+	void UpdateBullets(float dt);
 	void UpdateEnemies(float dt);
+
+	void DrawBullets();
 	void DrawEnemies();
+	void DrawWalls();
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -57,21 +59,22 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Sound bulletShotSound;
+
 	Menu menu;
 	Text txt;
-	FrameTimer ft;
 
+	FrameTimer ft;
 
 	Soldier player;
 
-	static constexpr int nEnemies = 100;
-	Enemy enemies[nEnemies];
+	static constexpr int maxNumberEnemies = 100;
+	Enemy enemies[maxNumberEnemies];
 	int currNumberEnemies = 0;
 
-	static constexpr int nBullets = 10;
-	Bullet playerBullets[nBullets];
-	static constexpr int nBulletsForEnemies = 100;
-	Bullet enemyBullets[nBulletsForEnemies];
+	static constexpr int maxNumberPlayerBullets = 10;
+	Bullet playerBullets[maxNumberPlayerBullets];
+	static constexpr int maxNumberEnemyBullets = 100;
+	Bullet enemyBullets[maxNumberEnemyBullets];
 
 	static constexpr int nWalls = 50;
 	RectF walls[nWalls];

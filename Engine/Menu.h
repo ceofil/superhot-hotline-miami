@@ -14,7 +14,7 @@ public:
 	Menu(Enemy* enemies_in, int maxNumberEnemies_in, int& currNumberEnemies_in,
 		 RectF* walls_in, int maxNumberWalls_in, int& currNumberWalls_in,
 		 Soldier& player_in,
-		Bullet * playerBullets, int maxNumberBullets, Bullet * enemyBullets, int maxNumberBulletsEnemies);
+		Bullet * playerBullets, int maxNumberPlayerBullets, Bullet * enemyBullets, int maxNumberEnemyBullets);
 	void Draw(Graphics& gfx, Mouse& mouse, Text& txt);
 	void HandleMousePressed(Mouse& mouse);
 	void AddWall(Mouse& mouse);
@@ -61,8 +61,8 @@ private:
 
 	Bullet* playerBullets;
 	Bullet* enemyBullets;
-	int maxNumberBullets;
-	int maxNumberBulletsEnemies;
+	int maxNumberPlayerBullets;
+	int maxNumberEnemyBullets;
 
 	Level level;
 

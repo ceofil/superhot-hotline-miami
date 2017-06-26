@@ -15,6 +15,7 @@ public:
 	void Update(Keyboard& kbd, Mouse& mouse, const RectF walls[], int currNumberWalls, Bullet bullets[], int nBullets,
 		Bullet otherBullets[], int nOtherBullets, float dt);
 	void Draw(Graphics& gfx, Color c);
+	void Draw(Graphics& gfx);
 	void Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound);
 	void DoWallCollision(const RectF& wall, Vec2 delta, float dt);
 	void HandleBullets(Bullet otherBullets[], int nOtherBullets);
