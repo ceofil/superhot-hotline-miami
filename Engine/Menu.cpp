@@ -17,15 +17,16 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	enemyBullets(enemyBullets),
 	maxNumberBulletsEnemies(maxNumberBulletsEnemies)
 {
-	static constexpr float sw = float(Graphics::ScreenWidth);
-	static constexpr float sh = float(Graphics::ScreenHeight);
-	static constexpr float wCenter = sw / 2; 
-	static constexpr float hCenter = sh / 2;
-	static constexpr float width = 150.0f;
+	const float sw = float(Graphics::ScreenWidth);
+	const float sh = float(Graphics::ScreenHeight);
+	const float wCenter = sw / 2; 
+	const float hCenter = sh / 2;
+	const float width = 150.0f;
 
 	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start game", 2, Color(255, 165, 0));
 	load = Button(RectF::FromCenter(wCenter, hCenter -25.0f, width, 50.0f), "load level", 2, Color(0, 165, 255));
 	editor = Button(RectF::FromCenter(wCenter, hCenter + 50.0f, width, 50.0f), "level editor", 2, Color(0, 165, 255));
+	restart = Button(RectF::FromCenter(wCenter, sh - 50.0f, width*2.0f, 50.0f), "press r to restart", 2, Color(255, 50, 70));
 
 	back = Button(RectF::FromCenter(100.0f, 50.0f, width, 50.0f), "back", 2, Color(165, 0, 255));
 	save = Button(RectF::FromCenter(100.0f + width, 50.0f, width, 50.0f), "save", 2, Color(255, 0, 165));
@@ -37,12 +38,13 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	addEnemy = Button(RectF::FromCenter(100.0f + width * 2.0f, sh - 50.0f, width, 50.0f), "add enemy", 2, Color(165, 165, 0));
 	removeEnemy = Button(RectF::FromCenter(100.0f + width * 3.0f, sh - 50.0f, width, 50.0f), "remove enemy", 2, Color(0, 165, 165));
 	placePlayer = Button(RectF::FromCenter(100.0f + width * 4.0f, sh - 50.0f, width, 50.0f), "place player", 2, Color(200, 100, 50));
-	level.SetPlayerEntry(player.GetPos(), 180.0f);
+
+	player.Set( Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f) );
+	level.SetPlayerEntry( player.GetPos(), 90.0f );
 }
 
 void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 {
-
 	switch (gameState)
 	{
 	case GameState::firstMenu:
@@ -52,10 +54,14 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 		load.Draw(gfx, mouse, txt);
 		break;
 	}
+	case GameState::playerDied:
+	{
+		restart.Draw(gfx, mouse, txt);
+		break;
+	}
 	case GameState::levelEditor:
 	{
 		level.Draw(gfx);
-		level.DrawPlayerEntry(gfx);
 		switch (editorState)
 		{
 			case EditorState::nothing:
@@ -94,7 +100,10 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 			}
 			case EditorState::placePlayer:
 			{
-				Soldier(posBuffer, Enemy::AngleToVec2(angleBuffer)).Draw(gfx, Color(100, 150, 255));
+				if (playerPlaced)
+				{
+					Soldier(posBuffer, Enemy::AngleToVec2(angleBuffer)).Draw(gfx, Color(100, 150, 255));
+				}
 				break;
 			}
 			case EditorState::removeWall:
@@ -131,6 +140,15 @@ void Menu::HandleMousePressed(Mouse& mouse)
 		if (editor.IsMouseOver(mouse))
 		{
 			gameState = GameState::levelEditor;
+		}
+		break;
+	}
+	case GameState::playerDied:
+	{
+		if (restart.IsMouseOver(mouse))
+		{
+			RestartGame();
+			gameState = GameState::gameStarted;
 		}
 		break;
 	}

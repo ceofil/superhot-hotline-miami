@@ -12,6 +12,8 @@ void Soldier::Set(Vec2 pos_in, Vec2 dir_in)
 {
 	startPos = pos_in;
 	startDir = dir_in;
+	pos = pos_in;
+	dir = dir_in;
 }
 
 void Soldier::Respawn()
@@ -32,22 +34,22 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse,
 	
 	bool movementHappened = false;
 	Vec2 delta = { 0.0f,0.0f };
-	if (kbd.KeyIsPressed(0x57))
+	if (kbd.KeyIsPressed('W'))
 	{
 		delta.y = -1.0f;
 		movementHappened = true;
 	}
-	else if (kbd.KeyIsPressed(0x53))
+	else if (kbd.KeyIsPressed('S'))
 	{
 		delta.y = 1.0f;
 		movementHappened = true;
 	}
-	if (kbd.KeyIsPressed(0x41))
+	if (kbd.KeyIsPressed('A'))
 	{
 		delta.x = -1.0f;
 		movementHappened = true;
 	}
-	else if (kbd.KeyIsPressed(0x44))
+	else if (kbd.KeyIsPressed('D'))
 	{
 		delta.x = 1.0f;
 		movementHappened = true;

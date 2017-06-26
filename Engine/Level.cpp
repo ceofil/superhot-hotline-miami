@@ -79,7 +79,7 @@ void Level::RemoveEnemyEntry(Vec2 cursor)
 
 void Level::SetPlayerEntry(Vec2 pos, float angle)
 {
-	playerEntry = SoldierEntry(pos, int(angle));
+	playerEntry = SoldierEntry( pos, int(angle) );
 }
 
 void Level::Load(const char * filename_in)
@@ -141,6 +141,7 @@ void Level::Draw(Graphics & gfx)
 	{
 		Enemy(enemyEntries[i].GetPos(), float(enemyEntries[i].GetAngle())).Draw(gfx);
 	}
+	Soldier(playerEntry.GetPos(), Enemy::AngleToVec2(float(playerEntry.GetAngle())) ).Draw(gfx,Color(100,150,255));
 }
 
 void Level::DrawPlayerEntry(Graphics & gfx)

@@ -29,6 +29,7 @@ private:
 	Button start;
 	Button load;
 	Button editor;
+	Button restart;
 
 	Button back;
 	Button save;
@@ -70,7 +71,8 @@ public:
 	{
 		firstMenu,
 		levelEditor,
-		gameStarted
+		gameStarted,
+		playerDied
 	};
 	enum class EditorState
 	{

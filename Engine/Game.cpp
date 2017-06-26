@@ -29,7 +29,6 @@ Game::Game(MainWindow& wnd)
 	menu(enemies, nEnemies, currNumberEnemies, walls, nWalls, currNumberWalls, player, playerBullets, nBullets, enemyBullets, nBulletsForEnemies),
 	txt(gfx, 0, 0, 1)
 {
-	player.Set(Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f));
 	menu.RestartGame();
 }
 
@@ -62,7 +61,7 @@ void Game::UpdateModel(float dt)
 			}
 			if (player.IsAlive() == false)
 			{
-				menu.RestartGame();
+				menu.gameState = Menu::GameState::playerDied;
 			}
 
 			player.Update(wnd.kbd, wnd.mouse, walls, currNumberWalls, playerBullets, nBullets, enemyBullets, nBulletsForEnemies, dt);
@@ -100,14 +99,14 @@ void Game::UpdateModel(float dt)
 
 void Game::ComposeFrame()
 {
-	menu.Draw(gfx, wnd.mouse, txt);
-	if(menu.gameState == Menu::GameState::gameStarted)
+	if(menu.gameState == Menu::GameState::gameStarted || menu.gameState == Menu::GameState::playerDied)
 	{
 		player.Draw(gfx, Color(100, 150, 255));
 		DrawEnemies();
 		DrawBullets();
 		DrawWalls();
 	}
+	menu.Draw(gfx, wnd.mouse, txt);
 }
 
 
@@ -177,6 +176,7 @@ void Game::HandleInput()
 			{
 			case 0x52:
 				menu.RestartGame();
+				menu.gameState = Menu::GameState::gameStarted;
 				break;
 			case VK_ESCAPE:
 				if (menu.editorState == Menu::EditorState::nothing)
