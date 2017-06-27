@@ -145,6 +145,8 @@ void Level::Draw(Graphics & gfx)
 }
 
 
+
+
 Level::SoldierEntry::SoldierEntry(Vec2 pos_in, int angle_in)
 	:
 	pos(pos_in),

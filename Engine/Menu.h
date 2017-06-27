@@ -24,10 +24,15 @@ public:
 	void PlacePlayer(Mouse& mouse);
 	void RestartGame();
 
+
 private:
 
-	Button start;
+
 	Button load;
+	Button left;
+	Button right;
+
+	Button start;
 	Button editor;
 	Button restart;
 
@@ -85,4 +90,11 @@ public:
 	};
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;
+private:
+	int currLevel;
+	int NumberOfLevels = 5;
+	char fileNameBuffer[50];
+	void IntToChar(char * Dst, int number);
+	void SetFileName(char* Dst, int number);
+	void ChangeLevel(int wantedLevel);
 };

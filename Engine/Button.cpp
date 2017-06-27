@@ -33,3 +33,8 @@ bool Button::IsMouseOver(Mouse & mouse)
 {
 	return rect.ContainsPoint( mouse.GetPosVec2() );
 }
+
+void Button::SetText(char * source)
+{
+	strcpy(text, source);
+}

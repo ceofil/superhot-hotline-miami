@@ -23,8 +23,12 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	const float hCenter = sh / 2;
 	const float width = 150.0f;
 
+
+	load = Button(RectF::FromCenter(wCenter, hCenter - 25.0f, width, 50.0f), "load level", 2, Color(0, 165, 255));
+	left = Button(RectF::FromCenter(wCenter-width * 0.75, hCenter - 25.0f, width / 5.0f, 50.0f), "", 2, Color(0, 165, 255));
+	right = Button(RectF::FromCenter(wCenter + width * 0.75f, hCenter - 25.0f, width / 5.0f, 50.0f), "", 2, Color(0, 165, 255));
+
 	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start game", 2, Color(255, 165, 0));
-	load = Button(RectF::FromCenter(wCenter, hCenter -25.0f, width, 50.0f), "load level", 2, Color(0, 165, 255));
 	editor = Button(RectF::FromCenter(wCenter, hCenter + 50.0f, width, 50.0f), "level editor", 2, Color(0, 165, 255));
 	restart = Button(RectF::FromCenter(wCenter, sh - 50.0f, width*2.0f, 50.0f), "press r to restart", 2, Color(255, 50, 70));
 
@@ -41,17 +45,27 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 
 	player.Set( Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f) );
 	level.SetPlayerEntry( player.GetPos(), 90.0f );
+
+	std::strcpy(fileNameBuffer, "level ");
+
+	ChangeLevel(1);
 }
 
 void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 {
 	switch (gameState)
 	{
+	case GameState::gameStarted:
+	{
+		break;
+	}
 	case GameState::firstMenu:
 	{
 		editor.Draw(gfx, mouse, txt);
 		start.Draw(gfx, mouse, txt);
 		load.Draw(gfx, mouse, txt);
+		left.Draw(gfx, mouse, txt);
+		right.Draw(gfx, mouse, txt);
 		break;
 	}
 	case GameState::playerDied:
@@ -61,6 +75,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	}
 	case GameState::levelEditor:
 	{
+		
 		level.Draw(gfx);
 		switch (editorState)
 		{
@@ -130,12 +145,18 @@ void Menu::HandleMousePressed(Mouse& mouse)
 	{
 		if (start.IsMouseOver(mouse))
 		{
+			level.Load(fileNameBuffer);
+			level.Implement(walls, currNumberWalls, enemies, currNumberEnemies, player);
 			RestartGame();
 			gameState = GameState::gameStarted;
 		}
-		if (load.IsMouseOver(mouse))
+		if (left.IsMouseOver(mouse))
 		{
-			level.Load("level.txt");
+			ChangeLevel(currLevel - 1);
+		}
+		if (right.IsMouseOver(mouse))
+		{
+			ChangeLevel(currLevel + 1); 
 		}
 		if (editor.IsMouseOver(mouse))
 		{
@@ -165,7 +186,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			}
 			if (save.IsMouseOver(mouse))
 			{
-				level.Save("level.txt");
+				level.Save(fileNameBuffer);
 			}
 			if (implement.IsMouseOver(mouse))
 			{
@@ -328,3 +349,36 @@ void Menu::RestartGame()
 	}
 }
 
+void Menu::IntToChar(char * Dst, int number)
+{
+	int reversed = 0;
+	while (number != 0)
+	{
+		reversed = reversed * 10 + number % 10;
+		number = number / 10;
+	}
+
+	while (reversed != 0)
+	{
+		*Dst = '0' + reversed % 10;
+		reversed = reversed / 10;
+		Dst++;
+	}
+	*Dst = 0;
+}
+
+void Menu::SetFileName(char * Dst, int number)
+{
+	IntToChar( fileNameBuffer + 6, number );
+	load.SetText( fileNameBuffer );
+	std::strcat( Dst, ".txt" );
+}
+
+void Menu::ChangeLevel(int wantedLevel)
+{
+	if (wantedLevel > 0 && wantedLevel <= NumberOfLevels)
+	{
+		currLevel = wantedLevel;
+		SetFileName( fileNameBuffer, wantedLevel );
+	}
+}
