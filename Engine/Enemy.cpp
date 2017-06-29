@@ -124,13 +124,6 @@ void Enemy::TrackTarget(const Soldier& player, const RectF walls[], int currNumb
 
 bool Enemy::CanSee(const Soldier & player, const RectF walls[], int currNumberWalls) const
 {
-	//can't see what's behind
-	if (DotProduct(enemy.GetDir(), (player.GetPos() - enemy.GetPos()).GetNormalized()) <  0.0f)
-	{
-		return false;
-	}
-
-	//can't see through walls
 	for (int i = 0; i <= currNumberWalls; i++)
 	{
 		if( Line(enemy.GetPos(), player.GetPos()).OverlappingWith_Rect(walls[i]) )
@@ -138,7 +131,6 @@ bool Enemy::CanSee(const Soldier & player, const RectF walls[], int currNumberWa
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -215,9 +207,4 @@ void Enemy::NormalizeAngle(float & angle)
 		if (angle > 0.0f) angle -= 360.0f;
 		else angle += 360.0f;
 	}
-}
-
-float Enemy::DotProduct(Vec2 a, Vec2 b)
-{
-	return a.x * b.x + a.y * b.y;
 }
