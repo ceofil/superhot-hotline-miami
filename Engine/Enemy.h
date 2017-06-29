@@ -50,4 +50,5 @@ public:
 	static Vec2 AngleToVec2(float angle);
 	static float Vec2ToAngle(Vec2 vec);
 	static void NormalizeAngle(float & angle);
+	static float DotProduct(Vec2 a, Vec2 b);
 };
