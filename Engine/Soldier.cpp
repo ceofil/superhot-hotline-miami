@@ -59,6 +59,7 @@ void Soldier::Update(Keyboard & kbd, Mouse& mouse,
 	{
 		active = true;
 		pos += delta.GetNormalized() * speed * dt;
+		KeepInsideScreen();
 		for ( int i = 0; i < currNumberWalls; i++)
 		{
 			DoWallCollision(walls[i], delta, dt);
@@ -154,6 +155,27 @@ void Soldier::DoWallCollision(const RectF & wall, Vec2 delta, float dt)
 			}
 		}
 	}
+}
+
+void Soldier::KeepInsideScreen()
+{
+	if (pos.x - radius < 0.0f)
+	{
+		pos.x = radius;
+	}
+	if (pos.y - radius < 0.0f)
+	{
+		pos.y = radius;
+	}
+	if (pos.x + radius > float(Graphics::ScreenWidth))
+	{
+		pos.x = float(Graphics::ScreenWidth) - radius;
+	}
+	if (pos.y + radius > float(Graphics::ScreenHeight))
+	{
+		pos.y = float(Graphics::ScreenHeight) - radius;
+	}
+
 }
 
 void Soldier::HandleBullets(Bullet otherBullets[], int nOtherBullets)

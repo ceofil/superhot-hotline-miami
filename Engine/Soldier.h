@@ -18,6 +18,7 @@ public:
 	void Draw(Graphics& gfx);
 	void Shoot(Bullet bullets[], int nBullets, Sound& bulletShotSound);
 	void DoWallCollision(const RectF& wall, Vec2 delta, float dt);
+	void KeepInsideScreen();
 	void HandleBullets(Bullet otherBullets[], int nOtherBullets);
 
 public:

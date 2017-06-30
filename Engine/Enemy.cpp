@@ -67,6 +67,7 @@ void Enemy::Update(const Soldier & player,
 			target = trackingPoints[0];
 			TrackTarget( walls, currNumberWalls, dt );
 		}
+		enemy.KeepInsideScreen();
 	}
 	else
 	{

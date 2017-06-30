@@ -17,7 +17,7 @@ void Bullet::Update(float dt, RectF walls[], int currNumberWalls, Sound& wallBou
 {
 	pos += dir * speed * dt;
 	
-	if ( !GetRect().IsContainedBy( RectF(0.0f, float(Graphics::ScreenWidth), 0.0f, float(Graphics::ScreenHeight - 35)) ) )
+	if ( !GetRect().IsContainedBy( RectF(0.0f, float(Graphics::ScreenWidth), 0.0f, float(Graphics::ScreenHeight)) ) )
 	{
 		Destroy();
 	}
