@@ -19,7 +19,7 @@ public:
 		Bullet otherBullets[], int nOtherBullets,
 		Sound& bulletShotSound, 
 		float dt);
-	void TrackTarget(const Soldier& player, const RectF walls[], int currNumberWalls, float dt);
+	void TrackTarget( const RectF walls[], int currNumberWalls, float dt);
 	bool CanSee(const Soldier& player, const RectF walls[], int currNumberWalls) const;
 	void RotateToward(float wantedAngle, float dt);
 
@@ -33,9 +33,11 @@ private:
 	bool triggered = false;
 
 private:
+	Vec2 target;
+private:
 	float addPointCooldown = 0.0f;
 	static constexpr int nTrackingPoints = 85;
-	int indexTrackingPoints = -1;
+	int indexTrackingPoints = 0;
 	Vec2 trackingPoints[nTrackingPoints];
 	void AddTrackingPoint(Vec2 tp);
 	void RemoveTrackingPoint();
