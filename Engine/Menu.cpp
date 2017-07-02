@@ -426,6 +426,42 @@ void Menu::RestartGame()
 	}
 }
 
+void Menu::GoBack()
+{
+	switch(gameState)
+	{
+	case GameState::selectLevel:
+	{
+		gameState = GameState::firstMenu;
+		break;
+	}
+	case GameState::gameStarted:
+	case GameState::playerDied:
+	{
+		gameState = GameState::selectLevel;
+		break;
+	}
+	case GameState::levelEditor:
+	{
+		switch(editorState)
+		{
+		case EditorState::selectLevel:
+		{
+			gameState = GameState::firstMenu;
+			break;
+		}
+		case EditorState::nothing:
+		case EditorState::deleteLevel:
+		{
+			editorState = EditorState::selectLevel;
+			break;
+		}
+		}
+		break;
+	}
+	}
+}
+
 Vec2 Menu::GetButtonCenter(int level)
 {
 	float x = float( (level-1) % buttonsPerRow);

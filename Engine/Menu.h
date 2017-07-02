@@ -23,6 +23,7 @@ public:
 	void RemoveEnemy(Mouse& mouse);
 	void PlacePlayer(Mouse& mouse);
 	void RestartGame();
+	void GoBack();
 
 
 private:

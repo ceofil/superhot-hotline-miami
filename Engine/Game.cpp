@@ -73,11 +73,6 @@ void Game::UpdateModel(float dt)
 		{
 			switch (menu.editorState)
 			{
-				case Menu::EditorState::deleteLevel:
-				{
-					//
-					break;
-				}
 				case Menu::EditorState::addWall:
 				{
 					menu.AddWall(wnd.mouse);
@@ -148,10 +143,7 @@ void Game::HandleInput()
 				menu.gameState = Menu::GameState::gameStarted;
 				break;
 			case VK_ESCAPE:
-				if (menu.editorState == Menu::EditorState::nothing || menu.editorState == Menu::EditorState::selectLevel)
-				{
-					menu.gameState = Menu::GameState::firstMenu;
-				}
+				menu.GoBack();
 				break;
 			}
 		}
