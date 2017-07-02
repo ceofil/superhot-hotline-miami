@@ -37,6 +37,7 @@ private:
 	Button start;
 	Button editor;
 	Button addLevel;
+	Button deleteLevel;
 
 	Button restart;
 
@@ -92,7 +93,8 @@ public:
 		removeWall,
 		addEnemy,
 		removeEnemy,
-		placePlayer
+		placePlayer,
+		deleteLevel
 	};
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;
@@ -103,4 +105,5 @@ private:
 	void SetFileName(char* Dst, int number);
 	void ChangeLevel(int wantedLevel);
 	void AddLevel();
+	void DeleteLevel(int level);
 };

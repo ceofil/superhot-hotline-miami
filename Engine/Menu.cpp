@@ -35,10 +35,11 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	}
 
 	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, buttonWidth, buttonHeight), "start game", 2, Color(255, 165, 0));
-	editor = Button(RectF::FromCenter(wCenter, hCenter + buttonHeight, buttonWidth, buttonHeight), "level editor", 2, Color(0, 165, 255));
-	addLevel = Button(RectF::FromCenter(wCenter - buttonWidth, sh - 100.0f, buttonWidth, buttonHeight), "add level", 2, Color(255, 75, 75));
-
 	restart = Button(RectF::FromCenter(wCenter, sh - buttonHeight, buttonWidth*2.0f, buttonHeight), "press r to restart", 2, Color(255, 50, 70));
+
+	editor = Button(RectF::FromCenter(wCenter, hCenter + buttonHeight, buttonWidth, buttonHeight), "level editor", 2, Color(0, 165, 255));
+	addLevel = Button(RectF::FromCenter(wCenter - buttonWidth, sh - 100.0f, buttonWidth, buttonHeight), "add level", 2, Color(25, 75, 255));
+	deleteLevel = Button(RectF::FromCenter(wCenter + buttonWidth, sh - 100.0f, buttonWidth, buttonHeight), "delete level", 2, Color(220,0,200));
 
 	back = Button(RectF::FromCenter(100.0f, buttonHeight, buttonWidth, buttonHeight), "back", 2, Color(165, 0, 255));
 	save = Button(RectF::FromCenter(100.0f + buttonWidth, buttonHeight, buttonWidth, buttonHeight), "save", 2, Color(255, 0, 165));
@@ -55,8 +56,6 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	level.SetPlayerEntry( player.GetPos(), 90.0f );
 
 	std::strcpy(fileNameBuffer, "level ");
-
-
 	
 }
 
@@ -85,7 +84,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	}
 	case GameState::levelEditor:
 	{
-		if (editorState != EditorState::selectLevel)
+		if (editorState != EditorState::selectLevel && editorState != EditorState::deleteLevel)
 		{
 			level.Draw(gfx);
 		}
@@ -93,11 +92,27 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 		{
 			case EditorState::selectLevel:
 			{
-				addLevel.Draw(gfx, mouse, txt);
+				{
+					addLevel.Draw(gfx, mouse, txt);
+					deleteLevel.Draw(gfx, mouse, txt);
+					for (int i = 1; i <= NumberOfLevels; i++)
+					{
+						levels[i].Draw(gfx, mouse, txt);
+					}
+					break;
+				}
+			}
+			case EditorState::deleteLevel:
+			{
+				deleteLevel.Draw(gfx, mouse, txt);
 				for (int i = 1; i <= NumberOfLevels; i++)
 				{
 					levels[i].Draw(gfx, mouse, txt);
 				}
+				Vec2 cursor = mouse.GetPosVec2();
+				int x = int(cursor.x);
+				int y = int(cursor.y);
+				txt.drawStringSizedCenter("DELETE", x, y, 2, Colors::Red);
 				break;
 			}
 			case EditorState::nothing:
@@ -210,6 +225,10 @@ void Menu::HandleMousePressed(Mouse& mouse)
 			{
 				AddLevel();
 			}
+			if (deleteLevel.IsMouseOver(mouse))
+			{
+				editorState = EditorState::deleteLevel;
+			}
 			for (int i = 1; i <= NumberOfLevels; i++)
 			{
 				if (levels[i].IsMouseOver(mouse))
@@ -220,6 +239,19 @@ void Menu::HandleMousePressed(Mouse& mouse)
 					break;
 				}
 			}
+			break;
+		}
+		case EditorState::deleteLevel:
+		{
+			for (int i = 1; i <= NumberOfLevels; i++)
+			{
+				if (levels[i].IsMouseOver(mouse))
+				{
+					DeleteLevel(i);
+					break;
+				}
+			}
+			editorState = EditorState::selectLevel;
 			break;
 		}
 		case EditorState::nothing:
@@ -421,7 +453,7 @@ void Menu::IntToChar(char * Dst, int number)
 
 void Menu::SetFileName(char * Dst, int number)
 {
-	IntToChar( fileNameBuffer + 6, number );
+	IntToChar( Dst + 6, number );
 	std::strcat( Dst, ".txt" );
 }
 
@@ -446,6 +478,28 @@ void Menu::AddLevel()
 	levels[NumberOfLevels] = Button(RectF::FromCenter(GetButtonCenter(NumberOfLevels), buttonWidth / 2.0f, buttonHeight / 2.0f), temp, 2, Color(255, 100, 255));
 	editorState = EditorState::nothing;
 	
+	std::ofstream out("nr_levels.txt");
+	out << NumberOfLevels;
+}
+
+void Menu::DeleteLevel(int level)
+{
+	SetFileName(fileNameBuffer, level);
+	remove(fileNameBuffer);
+
+	char oldFileName[50];
+	char newFileName[50];
+	strcpy(oldFileName, "level ");
+	strcpy(newFileName, "level ");
+	for (int i = level + 1; i <= NumberOfLevels; i++)
+	{
+		SetFileName(oldFileName, i);
+
+		SetFileName(newFileName, i - 1);
+
+		rename(oldFileName, newFileName);
+	}
+	NumberOfLevels--;
 	std::ofstream out("nr_levels.txt");
 	out << NumberOfLevels;
 }
