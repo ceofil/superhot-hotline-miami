@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include <algorithm> 
 
 Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_in, 
 	RectF * walls_in, int maxNumberWalls_in, int & currNumberWalls_in, 
@@ -258,8 +259,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 		{
 			if (back.IsMouseOver(mouse))
 			{
-				gameState = GameState::firstMenu;
-				editorState = EditorState::nothing;
+				editorState = EditorState::selectLevel;
 			}
 			if (save.IsMouseOver(mouse))
 			{
@@ -471,20 +471,15 @@ Vec2 Menu::GetButtonCenter(int level)
 
 void Menu::IntToChar(char * Dst, int number)
 {
-	int reversed = 0;
+	char* start = Dst;
 	while (number != 0)
 	{
-		reversed = reversed * 10 + number % 10;
+		*Dst = '0' + number % 10;
 		number = number / 10;
-	}
-
-	while (reversed != 0)
-	{
-		*Dst = '0' + reversed % 10;
-		reversed = reversed / 10;
 		Dst++;
 	}
 	*Dst = 0;
+	std::reverse(start, Dst);
 }
 
 void Menu::SetFileName(char * Dst, int number)
