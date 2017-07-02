@@ -27,7 +27,9 @@ public:
 
 private:
 	static constexpr int buttonsPerRow = 5;
-	static constexpr float wSpacing = float(Graphics::ScreenWidth - 150 * 5) / 6.0f;
+	static constexpr float buttonWidth = 150.0f;
+	static constexpr float buttonHeight = 50.0f;
+	static constexpr float wSpacing = float(Graphics::ScreenWidth - buttonWidth * 5) / 6.0f;
 	Button levels[50];
 	Vec2 GetButtonCenter(int level);
 

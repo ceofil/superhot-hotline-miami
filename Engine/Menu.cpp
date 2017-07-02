@@ -21,7 +21,6 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	const float sh = float(Graphics::ScreenHeight);
 	const float wCenter = sw / 2; 
 	const float hCenter = sh / 2;
-	const float width = 150.0f;
 
 	char temp[50];
 	strcpy(temp, "level ");
@@ -29,23 +28,23 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	for (int i = 1; i <= NumberOfLevels; i++)
 	{
 		IntToChar(temp + 6, i);
-		levels[i] = Button(RectF::FromCenter( GetButtonCenter(i), width/2.0f, 25.0f), temp, 2, Color(0, 165, 255));
+		levels[i] = Button(RectF::FromCenter( GetButtonCenter(i), buttonWidth/2.0f, buttonHeight / 2.0f), temp, 2, Color(0, 165, 255));
 	}
 
-	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start game", 2, Color(255, 165, 0));
-	editor = Button(RectF::FromCenter(wCenter, hCenter + 50.0f, width, 50.0f), "level editor", 2, Color(0, 165, 255));
-	restart = Button(RectF::FromCenter(wCenter, sh - 50.0f, width*2.0f, 50.0f), "press r to restart", 2, Color(255, 50, 70));
+	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, buttonWidth, buttonHeight), "start game", 2, Color(255, 165, 0));
+	editor = Button(RectF::FromCenter(wCenter, hCenter + buttonHeight, buttonWidth, buttonHeight), "level editor", 2, Color(0, 165, 255));
+	restart = Button(RectF::FromCenter(wCenter, sh - buttonHeight, buttonWidth*2.0f, buttonHeight), "press r to restart", 2, Color(255, 50, 70));
 
-	back = Button(RectF::FromCenter(100.0f, 50.0f, width, 50.0f), "back", 2, Color(165, 0, 255));
-	save = Button(RectF::FromCenter(100.0f + width, 50.0f, width, 50.0f), "save", 2, Color(255, 0, 165));
-	implement = Button(RectF::FromCenter(100.0f + width * 2.0f, 50.0f, width, 50.0f), "implement", 2, Color(0, 165, 255));
+	back = Button(RectF::FromCenter(100.0f, buttonHeight, buttonWidth, buttonHeight), "back", 2, Color(165, 0, 255));
+	save = Button(RectF::FromCenter(100.0f + buttonWidth, buttonHeight, buttonWidth, buttonHeight), "save", 2, Color(255, 0, 165));
+	implement = Button(RectF::FromCenter(100.0f + buttonWidth * 2.0f, buttonHeight, buttonWidth, buttonHeight), "implement", 2, Color(0, 165, 255));
 
-	addWall = Button(RectF::FromCenter(100.0f, sh-50.0f, width, 50.0f), "add wall", 2, Color(165, 165, 0));
-	removeWall = Button(RectF::FromCenter(100.0f + width, sh - 50.0f, width, 50.0f), "remove wall", 2, Color(0, 165, 165));
+	addWall = Button(RectF::FromCenter(100.0f, sh- buttonHeight, buttonWidth, buttonHeight), "add wall", 2, Color(165, 165, 0));
+	removeWall = Button(RectF::FromCenter(100.0f + buttonWidth, sh - buttonHeight, buttonWidth, buttonHeight), "remove wall", 2, Color(0, 165, 165));
 
-	addEnemy = Button(RectF::FromCenter(100.0f + width * 2.0f, sh - 50.0f, width, 50.0f), "add enemy", 2, Color(165, 165, 0));
-	removeEnemy = Button(RectF::FromCenter(100.0f + width * 3.0f, sh - 50.0f, width, 50.0f), "remove enemy", 2, Color(0, 165, 165));
-	placePlayer = Button(RectF::FromCenter(100.0f + width * 4.0f, sh - 50.0f, width, 50.0f), "place player", 2, Color(200, 100, 50));
+	addEnemy = Button(RectF::FromCenter(100.0f + buttonWidth * 2.0f, sh - buttonHeight, buttonWidth, buttonHeight), "add enemy", 2, Color(165, 165, 0));
+	removeEnemy = Button(RectF::FromCenter(100.0f + buttonWidth * 3.0f, sh - buttonHeight, buttonWidth, buttonHeight), "remove enemy", 2, Color(0, 165, 165));
+	placePlayer = Button(RectF::FromCenter(100.0f + buttonWidth * 4.0f, sh - buttonHeight, buttonWidth, buttonHeight), "place player", 2, Color(200, 100, 50));
 
 	player.Set( Vec2(600.0f, 660.0f), Vec2(0.0f, 1.0f) );
 	level.SetPlayerEntry( player.GetPos(), 90.0f );
@@ -384,7 +383,7 @@ Vec2 Menu::GetButtonCenter(int level)
 {
 	float x = float( (level-1) % buttonsPerRow);
 	float y = float( (level-1) / buttonsPerRow);
-	return Vec2(wSpacing + 75.0f + (wSpacing+150.0f) * x, 100.0f + 75.0f*y);
+	return Vec2(wSpacing + buttonWidth / 2.0f + (wSpacing + buttonWidth) * x, 100.0f + (buttonHeight + 25.0f)*y);
 }
 
 void Menu::IntToChar(char * Dst, int number)
