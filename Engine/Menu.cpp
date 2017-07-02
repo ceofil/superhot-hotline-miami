@@ -23,10 +23,14 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	const float hCenter = sh / 2;
 	const float width = 150.0f;
 
+	char temp[50];
+	strcpy(temp, "level ");
 
-	load = Button(RectF::FromCenter(wCenter, hCenter - 25.0f, width, 50.0f), "load level", 2, Color(0, 165, 255));
-	left = Button(RectF::FromCenter(wCenter-width * 0.75, hCenter - 25.0f, width / 5.0f, 50.0f), "", 2, Color(0, 165, 255));
-	right = Button(RectF::FromCenter(wCenter + width * 0.75f, hCenter - 25.0f, width / 5.0f, 50.0f), "", 2, Color(0, 165, 255));
+	for (int i = 1; i <= NumberOfLevels; i++)
+	{
+		IntToChar(temp + 6, i);
+		levels[i] = Button(RectF::FromCenter( GetButtonCenter(i), width/2.0f, 25.0f), temp, 2, Color(0, 165, 255));
+	}
 
 	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, width, 50.0f), "start game", 2, Color(255, 165, 0));
 	editor = Button(RectF::FromCenter(wCenter, hCenter + 50.0f, width, 50.0f), "level editor", 2, Color(0, 165, 255));
@@ -47,25 +51,24 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	level.SetPlayerEntry( player.GetPos(), 90.0f );
 
 	std::strcpy(fileNameBuffer, "level ");
-
-	ChangeLevel(1);
 }
 
 void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 {
 	switch (gameState)
 	{
-	case GameState::gameStarted:
-	{
-		break;
-	}
 	case GameState::firstMenu:
 	{
 		editor.Draw(gfx, mouse, txt);
 		start.Draw(gfx, mouse, txt);
-		load.Draw(gfx, mouse, txt);
-		left.Draw(gfx, mouse, txt);
-		right.Draw(gfx, mouse, txt);
+		break;
+	}
+	case GameState::selectLevel:
+	{
+		for (int i = 1; i <= NumberOfLevels; i++)
+		{
+			levels[i].Draw(gfx, mouse, txt);
+		}
 		break;
 	}
 	case GameState::playerDied:
@@ -75,10 +78,20 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 	}
 	case GameState::levelEditor:
 	{
-		
-		level.Draw(gfx);
+		if (editorState != EditorState::selectLevel)
+		{
+			level.Draw(gfx);
+		}
 		switch (editorState)
 		{
+			case EditorState::selectLevel:
+			{
+				for (int i = 1; i <= NumberOfLevels; i++)
+				{
+					levels[i].Draw(gfx, mouse, txt);
+				}
+				break;
+			}
 			case EditorState::nothing:
 			{
 				back.Draw(gfx, mouse, txt);
@@ -145,22 +158,27 @@ void Menu::HandleMousePressed(Mouse& mouse)
 	{
 		if (start.IsMouseOver(mouse))
 		{
-			level.Load(fileNameBuffer);
-			level.Implement(walls, currNumberWalls, enemies, currNumberEnemies, player);
-			RestartGame();
-			gameState = GameState::gameStarted;
-		}
-		if (left.IsMouseOver(mouse))
-		{
-			ChangeLevel(currLevel - 1);
-		}
-		if (right.IsMouseOver(mouse))
-		{
-			ChangeLevel(currLevel + 1); 
+			gameState = GameState::selectLevel;
 		}
 		if (editor.IsMouseOver(mouse))
 		{
 			gameState = GameState::levelEditor;
+			editorState = EditorState::selectLevel;
+		}
+		break;
+	}
+	case GameState::selectLevel:
+	{
+		for (int i = 1; i <= NumberOfLevels; i++)
+		{
+			if (levels[i].IsMouseOver(mouse))
+			{
+				ChangeLevel(i);
+				level.Load(fileNameBuffer);
+				level.Implement(walls, currNumberWalls, enemies, currNumberEnemies, player);
+				RestartGame();
+				gameState = GameState::gameStarted;
+			}
 		}
 		break;
 	}
@@ -177,6 +195,19 @@ void Menu::HandleMousePressed(Mouse& mouse)
 	{
 		switch (editorState)
 		{
+		case EditorState::selectLevel:
+		{
+			for (int i = 1; i <= NumberOfLevels; i++)
+			{
+				if (levels[i].IsMouseOver(mouse))
+				{
+					ChangeLevel(i);
+					level.Load(fileNameBuffer);
+					editorState = EditorState::nothing;
+				}
+			}
+			break;
+		}
 		case EditorState::nothing:
 		{
 			if (back.IsMouseOver(mouse))
@@ -349,6 +380,13 @@ void Menu::RestartGame()
 	}
 }
 
+Vec2 Menu::GetButtonCenter(int level)
+{
+	float x = float( (level-1) % buttonsPerRow);
+	float y = float( (level-1) / buttonsPerRow);
+	return Vec2(wSpacing + 75.0f + (wSpacing+150.0f) * x, 100.0f + 75.0f*y);
+}
+
 void Menu::IntToChar(char * Dst, int number)
 {
 	int reversed = 0;
@@ -370,7 +408,6 @@ void Menu::IntToChar(char * Dst, int number)
 void Menu::SetFileName(char * Dst, int number)
 {
 	IntToChar( fileNameBuffer + 6, number );
-	load.SetText( fileNameBuffer );
 	std::strcat( Dst, ".txt" );
 }
 

@@ -12,6 +12,8 @@ public:
 	void Draw(Graphics& gfx, Mouse& mouse, Text& txt);
 	bool IsMouseOver(Mouse& mouse);
 	void SetText(char* source);
+	RectF GetRect() const;
+	void SetRect(RectF rect_in);
 private:
 	RectF rect;
 	Color color;

@@ -26,12 +26,12 @@ public:
 
 
 private:
+	static constexpr int buttonsPerRow = 5;
+	static constexpr float wSpacing = float(Graphics::ScreenWidth - 150 * 5) / 6.0f;
+	Button levels[50];
+	Vec2 GetButtonCenter(int level);
 
-
-	Button load;
-	Button left;
-	Button right;
-
+private:
 	Button start;
 	Button editor;
 	Button restart;
@@ -75,12 +75,14 @@ public:
 	enum class GameState
 	{
 		firstMenu,
+		selectLevel,
 		levelEditor,
 		gameStarted,
 		playerDied
 	};
 	enum class EditorState
 	{
+		selectLevel,
 		nothing,
 		addWall,
 		removeWall,

@@ -38,3 +38,13 @@ void Button::SetText(char * source)
 {
 	strcpy(text, source);
 }
+
+RectF Button::GetRect() const
+{
+	return rect;
+}
+
+void Button::SetRect(RectF rect_in)
+{
+	rect = rect_in;
+}
