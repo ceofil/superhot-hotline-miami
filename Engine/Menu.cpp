@@ -22,6 +22,9 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	const float wCenter = sw / 2; 
 	const float hCenter = sh / 2;
 
+	std::ifstream in("nr_levels.txt");
+	in >> NumberOfLevels;
+
 	char temp[50];
 	strcpy(temp, "level ");
 
@@ -33,6 +36,8 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 
 	start = Button(RectF::FromCenter(wCenter, hCenter - 100.0f, buttonWidth, buttonHeight), "start game", 2, Color(255, 165, 0));
 	editor = Button(RectF::FromCenter(wCenter, hCenter + buttonHeight, buttonWidth, buttonHeight), "level editor", 2, Color(0, 165, 255));
+	addLevel = Button(RectF::FromCenter(wCenter - buttonWidth, sh - 100.0f, buttonWidth, buttonHeight), "add level", 2, Color(255, 75, 75));
+
 	restart = Button(RectF::FromCenter(wCenter, sh - buttonHeight, buttonWidth*2.0f, buttonHeight), "press r to restart", 2, Color(255, 50, 70));
 
 	back = Button(RectF::FromCenter(100.0f, buttonHeight, buttonWidth, buttonHeight), "back", 2, Color(165, 0, 255));
@@ -50,6 +55,9 @@ Menu::Menu(Enemy * enemies_in, int maxNumberEnemies_in, int & currNumberEnemies_
 	level.SetPlayerEntry( player.GetPos(), 90.0f );
 
 	std::strcpy(fileNameBuffer, "level ");
+
+
+	
 }
 
 void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
@@ -85,6 +93,7 @@ void Menu::Draw(Graphics & gfx, Mouse & mouse, Text& txt)
 		{
 			case EditorState::selectLevel:
 			{
+				addLevel.Draw(gfx, mouse, txt);
 				for (int i = 1; i <= NumberOfLevels; i++)
 				{
 					levels[i].Draw(gfx, mouse, txt);
@@ -177,6 +186,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 				level.Implement(walls, currNumberWalls, enemies, currNumberEnemies, player);
 				RestartGame();
 				gameState = GameState::gameStarted;
+				break;
 			}
 		}
 		break;
@@ -196,6 +206,10 @@ void Menu::HandleMousePressed(Mouse& mouse)
 		{
 		case EditorState::selectLevel:
 		{
+			if (addLevel.IsMouseOver(mouse))
+			{
+				AddLevel();
+			}
 			for (int i = 1; i <= NumberOfLevels; i++)
 			{
 				if (levels[i].IsMouseOver(mouse))
@@ -203,6 +217,7 @@ void Menu::HandleMousePressed(Mouse& mouse)
 					ChangeLevel(i);
 					level.Load(fileNameBuffer);
 					editorState = EditorState::nothing;
+					break;
 				}
 			}
 			break;
@@ -414,7 +429,23 @@ void Menu::ChangeLevel(int wantedLevel)
 {
 	if (wantedLevel > 0 && wantedLevel <= NumberOfLevels)
 	{
-		currLevel = wantedLevel;
 		SetFileName( fileNameBuffer, wantedLevel );
 	}
+}
+
+void Menu::AddLevel()
+{
+	NumberOfLevels++;
+	SetFileName(fileNameBuffer, NumberOfLevels);
+	level.Clear();
+	
+	char temp[50];
+	strcpy(temp, "level ");
+	IntToChar(temp + 6, NumberOfLevels);
+
+	levels[NumberOfLevels] = Button(RectF::FromCenter(GetButtonCenter(NumberOfLevels), buttonWidth / 2.0f, buttonHeight / 2.0f), temp, 2, Color(255, 100, 255));
+	editorState = EditorState::nothing;
+	
+	std::ofstream out("nr_levels.txt");
+	out << NumberOfLevels;
 }

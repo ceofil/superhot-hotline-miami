@@ -6,7 +6,7 @@
 #include "RectF.h"
 #include "Level.h"
 #include "Bullet.h"
-
+#include <fstream>
 class Menu
 {
 public:
@@ -36,6 +36,8 @@ private:
 private:
 	Button start;
 	Button editor;
+	Button addLevel;
+
 	Button restart;
 
 	Button back;
@@ -95,10 +97,10 @@ public:
 	GameState gameState = GameState::firstMenu;
 	EditorState editorState = EditorState::nothing;
 private:
-	int currLevel;
-	int NumberOfLevels = 5;
+	int NumberOfLevels;
 	char fileNameBuffer[50];
 	void IntToChar(char * Dst, int number);
 	void SetFileName(char* Dst, int number);
 	void ChangeLevel(int wantedLevel);
+	void AddLevel();
 };

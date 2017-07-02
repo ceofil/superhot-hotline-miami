@@ -131,6 +131,13 @@ void Level::Implement(RectF * walls, int& currNumberWalls, Enemy * enemies, int&
 	currNumberEnemies = currNumber_EnemyEntries;
 }
 
+void Level::Clear()
+{
+	SetPlayerEntry(Vec2(600.0f, 700.0f), 90.0f);
+	currNumber_WallEntries = 0;
+	currNumber_EnemyEntries = 0;
+}
+
 void Level::Draw(Graphics & gfx)
 {
 	for (int i = 0; i < currNumber_WallEntries; i++)
