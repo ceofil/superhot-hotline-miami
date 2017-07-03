@@ -12,20 +12,17 @@ void Level::WallEntry::Serialize(std::ofstream & out) const
 	int right = int(rect.right);
 	int top = int(rect.top);
 	int bottom = int(rect.bottom);
-	out.write(reinterpret_cast<const char*>(&left), sizeof(left));
-	out.write(reinterpret_cast<const char*>(&right), sizeof(right));
-	out.write(reinterpret_cast<const char*>(&top), sizeof(top));
-	out.write(reinterpret_cast<const char*>(&bottom), sizeof(bottom));
+	out << left << " ";
+	out << right << " ";
+	out << top << " ";
+	out << bottom << " ";
 }
 
 void Level::WallEntry::Deserialize(std::ifstream & in)
 {
 	int left, right, top, bottom;
 
-	in.read(reinterpret_cast<char*>(&left), sizeof(left));
-	in.read(reinterpret_cast<char*>(&right), sizeof(right));
-	in.read(reinterpret_cast<char*>(&top), sizeof(top));
-	in.read(reinterpret_cast<char*>(&bottom), sizeof(bottom));
+	in >> left >> right >> top >> bottom;
 
 	rect = RectF(float(left), float(right), float(top), float(bottom));
 }
@@ -84,14 +81,14 @@ void Level::SetPlayerEntry(Vec2 pos, float angle)
 
 void Level::Load(const char * filename_in)
 {
-	std::ifstream in(filename_in, std::ios::binary);
+	std::ifstream in(filename_in);
 	playerEntry.Deserialize(in);
-	in.read(reinterpret_cast<char*>(&currNumber_WallEntries), sizeof(currNumber_WallEntries));
+	in >> currNumber_WallEntries;
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
 		wallEntries[i].Deserialize(in);
 	}
-	in.read(reinterpret_cast<char*>(&currNumber_EnemyEntries), sizeof(currNumber_EnemyEntries));
+	in >> currNumber_EnemyEntries;
 	for (int i = 0; i < currNumber_EnemyEntries; i++)
 	{
 		enemyEntries[i].Deserialize(in);
@@ -100,15 +97,15 @@ void Level::Load(const char * filename_in)
 
 void Level::Save(const char * filename_out)
 {
-	std::ofstream out(filename_out, std::ios::binary);
+	std::ofstream out(filename_out);
 	playerEntry.Serialize(out);
-	out.write(reinterpret_cast<char*>(&currNumber_WallEntries), sizeof(currNumber_WallEntries));
+	out << currNumber_WallEntries << " ";
 	for (int i = 0; i < currNumber_WallEntries; i++)
 	{
 		wallEntries[i].Serialize(out);
 	}
 
-	out.write(reinterpret_cast<char*>(&currNumber_EnemyEntries), sizeof(currNumber_EnemyEntries));
+	out << currNumber_EnemyEntries << " ";
 	for (int i = 0; i < currNumber_EnemyEntries; i++)
 	{
 		enemyEntries[i].Serialize(out);
@@ -166,18 +163,17 @@ void Level::SoldierEntry::Serialize(std::ofstream & out) const
 	int x = int(pos.x);
 	int y = int(pos.y);
 
-	out.write(reinterpret_cast<const char*>(&x), sizeof(x));
-	out.write(reinterpret_cast<const char*>(&y), sizeof(y));
-	out.write(reinterpret_cast<const char*>(&angle), sizeof(angle));
+	out << x << " ";
+	out << y << " ";
+	out << angle << " ";
 }
 
 void Level::SoldierEntry::Deserialize(std::ifstream & in)
 {
 	int x, y;
 
-	in.read(reinterpret_cast<char*>(&x), sizeof(x));
-	in.read(reinterpret_cast<char*>(&y), sizeof(y));
-	in.read(reinterpret_cast<char*>(&angle), sizeof(angle));
+	in >> x >> y >> angle;
+
 	pos = Vec2(float(x), float(y));
 }
 
